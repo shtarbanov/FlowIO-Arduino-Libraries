@@ -1,0 +1,67 @@
+FlowIO	KEYWORD1
+
+getConfig KEYWORD2
+setConfig KEYWORD2
+GENERAL			KEYWORD4
+INFLATION_SERIES	KEYWORD4
+INFLATION_PARALLEL	KEYWORD4
+VACUUM_SERIES		KEYWORD4
+VACUUM_PARALLEL		KEYWORD4
+
+activateSensor	KEYWORD2
+setPressureUnit	KEYWORD2
+getPressure	KEYWORD2
+HPA		KEYWORD4
+PSI		KEYWORD4
+ATM		KEYWORD4
+
+
+startPump		KEYWORD2
+stopPump		KEYWORD2
+openInletValve		KEYWORD2
+closeInletValve		KEYWORD2
+openOutletValve		KEYWORD2
+closeOutletValve	KEYWORD2
+
+openAllPorts		KEYWORD2
+closeAllPorts		KEYWORD2
+
+blueLED 		KEYWORD2
+pixel			KEYWORD2
+powerOFF 		KEYWORD2
+
+setPorts 		KEYWORD2
+openPorts		KEYWORD2
+closePorts		KEYWORD2
+
+getHardwareState	KEYWORD2
+getHardwareStateOf	KEYWORD2
+
+raiseError		KEYWORD2
+readError		KEYWORD2
+
+command 		KEYWORD2
+
+startInflation		KEYWORD2
+startInflation2x	KEYWORD2
+startVacuum		KEYWORD2
+startVacuum2x		KEYWORD2
+startRelease		KEYWORD2
+stopAction		KEYWORD2
+
+inflateT		KEYWORD2
+inflate2xT		KEYWORD2
+vacuumT			KEYWORD2
+vacuum2xT		KEYWORD2
+releaseT 		KEYWORD2
+
+inflateP		KEYWORD2
+inflate2xP		KEYWORD2
+vacuumP			KEYWORD2
+vacuum2xP		KEYWORD2
+releaseP		KEYWORD2
+
+
+
+
+
