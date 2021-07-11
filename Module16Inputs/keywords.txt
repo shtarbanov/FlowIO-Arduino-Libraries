@@ -1,0 +1,14 @@
+############### Datatypes ###############----KEYWORD1
+Module16Inputs	KEYWORD1
+
+######### Methods and Functions #########----KEYWORD2
+enableModule	KEYWORD2
+disableModule	KEYWORD2
+setMuxesChannel	KEYWORD2
+readChannel	KEYWORD2
+read16ChannelsInto	KEYWORD2
+
+readChannelMovAvg	KEYWORD2
+read16ChannelsMovAvgInto	KEYWORD2
+
+############### Constants ###############----LITERAL1

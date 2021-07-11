@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Analog</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <!-- Add icon library -->
+    <link rel="stylesheet" href="svgbuttons.css">
+  </head>
+  <body>
+    <h2>Analog</h2>
+    <div class="grid-parent"><!--BEGIN: Parent grid-->
+      <div class="grid-sidebar"><!--BEGIN: Sidebar grid-->
+        <div><!--Begin Connect / Disconnect section-->
+          <button class="button icon-disconnected" id="reconnect_btn0" visible autofocus onclick="reconnectDevice(flowios[0])" type="button" title="Device is disconnected. Press to reconnect." ></button>
+          <button class="button icon-connected" id="disconnect_btn0" hidden onclick="disconnectDevice(flowios[0])" type="button" title="Device is connected. Press to disconnect."></button>
+          <button class="button icon-loading" hidden id="loading_btn0" type="button" title="Waiting for connection..."></button>
+        </div><!--End Connect / Disconnect section-->
+      </div><!-- END: Sidebar grid-->
+      <hr>
+      <div class="grid-leftColumn">
+        Channel:
+        <select class='x0' id="channel_select0" onchange="flowios[0].analog.setAnalogChannel()" title="Select the input channel number" disabled>
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+        </select>
+        Samples:
+        <select class='x0' id="samples_select0" onchange="flowios[0].analog.setNumberOfSamples()" title="Choosed number of samples to do moving average over" disabled>
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+        <div><!--Begin Analog-->
+          <!-- <button class="x0" onclick="flowios[0].getPressureValue()" type="button" disabled>Read Value</button> -->
+          <button class="x0" onclick="flowios[0].analog.requestReadSingle()" type="button" disabled>Read Once</button>
+          <button class="x0" onclick="flowios[0].analog.requestReadSingleContinuous()" type="button" disabled>Read Continuously (Moving Average)</button>
+          <button class="x0" onclick="flowios[0].analog.stopReadContinuous()" type="button" disabled>Stop Reading</button>
+          <br>
+        <div style="width:50%; display:grid; grid-template-columns:1fr 1fr;">
+          <!-- <div style="margin-right:10px"> -->
+            <p>Limits P<sub>min</sub> (psi)<br>
+            </p>
+          <!-- </div> -->
+          <p>Limits P<sub>max</sub> (psi)<br>
+          </p>
+        </div>
+      </div><!--End Analog-->
+      </div>
+      <hr>
+      <div class="grid-centerColumn"></div>
+      <hr>
+      <div class="grid-rightColumn"><!--BEGIN: Right column grid-->
+        <h3>Log</h3>
+        <div><textarea readonly class="x0 log" id='log0'></textarea><br></div>
+        <div>
+          <button class="btn-log" onclick="clearLog(flowios[0])" type="button">Clear Log</button>
+        </div>
+      </div><!--END: Right column grid-->
+    </div><!--END: Parent grid-->
+  </body>
+  <script src="main.js"></script> <!--this must be loaded first -->
+  <script src="analogService.js"></script>
+</html>

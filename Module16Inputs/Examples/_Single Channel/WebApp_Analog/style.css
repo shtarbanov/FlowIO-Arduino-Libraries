@@ -1,0 +1,59 @@
+/* Add these x0 class to any control that you wish to be affected by the
+enableControls() and disableControls() methods in main.JS.
+
+NOTE:In addition to adding this class, you must set the initial state to diabled, so that
+on page load the controls are disabled by default.*/
+.x0:disabled,
+.x1:disabled,
+.x2:disabled,
+.x3:disabled,
+.x4:disabled,
+.x5:disabled,
+.x6:disabled{
+	opacity:0.4;
+}
+body {
+  font-family: "Overpass", "Open Sans", Helvetica, sans-serif;
+  line-height: 1.5em;
+}
+hr{
+  opacity:0.4;
+}
+
+/* #############################---Grid Structure---############################### */
+.grid-parent{
+  display: grid;
+  grid-template-columns: 60px 30px 380px 30px 380px 30px 350px;
+  grid-template-rows: 525px;
+  margin-left: 1em;
+}
+.grid-sidebar{
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  justify-self: center; /*centers itself relative to parent grid*/
+}
+.grid-rightColumn{
+  display:grid;
+  grid-template-rows: 2fr 37fr 6fr;
+}
+.center{
+	justify-self: center; /*centers itself relative to parent grid*/
+}
+/* #############################---Log---############################### */
+.log{
+  height: 30em; /*sets the frame height*/
+  width: 320px;
+  margin-top: 7px;
+	background: #fff8f8;
+}
+.btn-log{
+  background-color: #008CBA;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  padding: 4px 12px;
+  border-radius: 18px;
+}

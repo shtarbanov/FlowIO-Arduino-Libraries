@@ -1,6 +1,4 @@
-/* FlowIO.h - a library for controlling the pneumatic circuit
-	(I need to add this circuit board and the Tiny8SSR to my portfolio website)
-   Created by Ali Shtarbanov, Sept. 2019
+/* Created by Ali Shtarbanov
 */
 
 #ifndef FlowIO_h
@@ -9,11 +7,6 @@
 #include "Arduino.h"
 #include "Wire.h"
 #include "Adafruit_NeoPixel.h"
-
-#define MPRLS_POWERED        (0b01000000) ///< Status SPI powered bit
-#define MPRLS_BUSY           (0b00100000) ///< Status busy bit
-#define MPRLS_INTEGRITY_FAIL (0b00000100) ///< Status bit for integrity fail
-#define MPRLS_SATURATION     (0b00000001) ///< Status bit for math saturation
 
 #define blueLEDpin 4
 #define powerOFFpin 13
@@ -25,7 +18,7 @@
 #define toggle_bit(bit,var)	(var ^=  _BV(bit))
 
 enum Unit : uint8_t{
-	PSI, HPA, ATM
+	PSI, ATM, MBAR, KPA, PA
 };
 enum Configuration : uint8_t{ //pneumatic configuration mode
 	GENERAL, INFLATION_SERIES, VACUUM_SERIES, INFLATION_PARALLEL, VACUUM_PARALLEL
@@ -43,19 +36,21 @@ private:
 	uint8_t _inletValvePin=5; //(right) valve
 	uint8_t _outletValvePin=14; //(left) valve
 	Configuration _config;
-	bool _i2cInitialized=false; //becomes true when the activateSensor() function has been executed.
 	void _setConfig(Configuration config);
-	uint8_t _addr = 0x18;
-  TwoWire *_i2c;
-  uint8_t statusByte;
-  uint8_t _getStatusByte(void);
-  uint32_t _getRawPressure(void);
-  float _getPressureHPA();
-  float _getPressurePSI();
-  float _getPressureATM();
-  Unit _pressureUnit=PSI;
 
-  uint16_t _hardwareState = 0; /*this 16-bit variable will hold all info about what all the
+	//Pressure Sensor
+	TwoWire *_i2c;
+	bool _i2cInitialized=false; //becomes true when the activateSensor() function has been executed.
+  Unit _pressureUnit=PSI;
+	uint16_t C[8];
+	uint32_t D1_pres, D2_temp;
+	int32_t TEMP;
+	int32_t P;
+	void calculate(); //Performs calculations per the sensor data sheet for conversion and second order compensation.
+	uint8_t crc4(uint16_t n_prom[]);
+
+	//Status indicators
+	uint16_t _hardwareState = 0; /*this 16-bit variable will hold all info about what all the
   hardware is currently doing. Each bit corresponds to a hardware feature as follows:
    _______________________
   |bit| Component |'1' is |
@@ -82,6 +77,14 @@ private:
   uint8_t _errorCode = 0; //this will change value if an error occurs.
 
 public:
+	//Literals
+	float pressure_mbar=-1; //Pressure returned in mbar.
+	float pressure_psi=-1;
+	float pressure_atm=-1;
+	float pressure_pa=-1; //pascal
+	float pressure_kpa=-1; //kiloPascal
+	float temp_c=-1; // Temperature returned in deg C
+
 	//CONSTRUCTORS
 	FlowIO(); //TODO: Check if I can just use a single constructor FlowIO(Configuration config=GENERAL);
 	FlowIO(Configuration config);
@@ -90,6 +93,7 @@ public:
 
 	//PRESSURE SENSING
 	bool activateSensor();
+	void requestPressure();
 	void setPressureUnit(Unit pUnit); //default is PSI.
 	float getPressure();
 	float getPressure(Unit pUnit);

@@ -1,0 +1,37 @@
+/*SVG to CSS URL Converter:  https://yoksel.github.io/url-encoder/ */
+/*Bootstrap icons: https://icons.getbootstrap.com/? */
+
+.button{
+	height:32px;
+	width:32px;
+	border:none;
+	vertical-align: top;
+	background: white;
+}
+.border{
+	border: 1px solid green;
+}
+
+/*#######################--- Connection Icons ---##############################*/
+.icon-disconnected {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg transform='translate(12.265 27.434)' fill='none' stroke='%2326ce00' stroke-width='15' stroke-linecap='round' stroke-miterlimit='2'%3E%3Cpath d='M92.345 114.286C75.672 97.724 61.172 83.55 40.7 62.641c-23.08 23.08-25.186 48.454-10.834 62.805 14.351 14.351 39.4 11.92 62.479-11.16z' /%3E%3Cpath d='M33.547 55.065l66.932 66.931' /%3E%3Cpath d='M0 155.547l29.475-29.475' /%3E%3Cpath d='M114.565 92.93C98.003 76.257 83.83 61.758 62.921 41.286 86 18.206 111.374 16.1 125.725 30.45c14.351 14.352 11.92 39.4-11.16 62.48z' /%3E%3Cpath d='M55.125 34.12l66.932 66.932' /%3E%3Cpath d='M126.293 29.093L155.385 0' /%3E%3Cpath d='M92.849 90.452l8.994-8.995' /%3E%3Cpath d='M67.296 64.9l8.994-8.995' /%3E%3C/g%3E%3C/svg%3E%0A");
+	background-repeat: no-repeat;
+}
+.icon-connected {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg transform='translate(12.265 27.434)' fill='%2326ce00' stroke='%2326ce00' stroke-width='15' stroke-linecap='round' stroke-miterlimit='2'%3E%3Cpath d='M92.345 114.286C75.672 97.724 61.172 83.55 40.7 62.641c-23.08 23.08-25.186 48.454-10.834 62.805 14.351 14.351 39.4 11.92 62.479-11.16z' /%3E%3Cpath d='M33.547 55.065l66.932 66.931' /%3E%3Cpath d='M0 155.547l29.475-29.475' /%3E%3Cpath d='M99.565 107.93C83.003 91.257 68.83 76.758 47.921 56.286 71 33.206 96.374 31.1 110.725 45.45c14.351 14.352 11.92 39.4-11.16 62.48z' /%3E%3Cpath d='M40.125 49.12l66.932 66.932' /%3E%3Cpath d='M110.935 44.45L155.385 0' /%3E%3Cpath transform='matrix(.32 0 0 .32 77.849 96.457)' d='M0 28.107L28.107 0'/%3E%3Cpath transform='matrix(.32 0 0 .32 52.296 70.905)' d='M0 28.107L28.107 0'/%3E%3C/g%3E%3C/svg%3E%0A");
+	background-repeat: no-repeat;
+}
+.icon-loading { /*https://www.flaticon.com/free-icons/loading*/
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%2326ce00' viewBox='0 0 512 512'%3E%3Cpath d='M368 224a144 144 0 100 288 144 144 0 000-288zm59 203a16 16 0 01-22 0l-48-48c-3-3-5-7-5-11v-64a16 16 0 0132 0v57l43 44c7 6 7 16 0 22zM204 305l-3-5-41-40-41 40a79 79 0 00-23 57v27h97a177 177 0 0111-79zM96 64v27c0 21 8 41 23 57l41 40 41-40c15-16 23-36 23-57V64H96z'/%3E%3Cpath d='M304 0H16a16 16 0 000 32h16v59c0 38 15 75 42 102l31 31-31 31c-27 27-42 64-42 102v59H16a16 16 0 000 32h195c-5-10-9-21-12-32H64v-59c0-30 12-58 33-79l42-43a16 16 0 000-22l-42-43c-21-21-33-49-33-79V32h192v59c0 30-12 58-33 79l-42 43a16 16 0 000 22l38 39c6-9 13-18 20-25l-24-25 31-31c27-27 42-64 42-102V32h16a16 16 0 000-32z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+}
+/* ---------------------------------- */
+.icon-connected:hover {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg transform='translate(12.265 27.434)' fill='black' stroke='black' stroke-width='15' stroke-linecap='round' stroke-miterlimit='2'%3E%3Cpath d='M92.345 114.286C75.672 97.724 61.172 83.55 40.7 62.641c-23.08 23.08-25.186 48.454-10.834 62.805 14.351 14.351 39.4 11.92 62.479-11.16z' /%3E%3Cpath d='M33.547 55.065l66.932 66.931' /%3E%3Cpath d='M0 155.547l29.475-29.475' /%3E%3Cpath d='M99.565 107.93C83.003 91.257 68.83 76.758 47.921 56.286 71 33.206 96.374 31.1 110.725 45.45c14.351 14.352 11.92 39.4-11.16 62.48z' /%3E%3Cpath d='M40.125 49.12l66.932 66.932' /%3E%3Cpath d='M110.935 44.45L155.385 0' /%3E%3Cpath transform='matrix(.32 0 0 .32 77.849 96.457)' d='M0 28.107L28.107 0'/%3E%3Cpath transform='matrix(.32 0 0 .32 52.296 70.905)' d='M0 28.107L28.107 0'/%3E%3C/g%3E%3C/svg%3E%0A");
+	background-repeat: no-repeat;
+}
+
+.icon-disconnected:hover{
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg transform='translate(12.265 27.434)' fill='none' stroke='black' stroke-width='15' stroke-linecap='round' stroke-miterlimit='2'%3E%3Cpath d='M92.345 114.286C75.672 97.724 61.172 83.55 40.7 62.641c-23.08 23.08-25.186 48.454-10.834 62.805 14.351 14.351 39.4 11.92 62.479-11.16z' /%3E%3Cpath d='M33.547 55.065l66.932 66.931' /%3E%3Cpath d='M0 155.547l29.475-29.475' /%3E%3Cpath d='M114.565 92.93C98.003 76.257 83.83 61.758 62.921 41.286 86 18.206 111.374 16.1 125.725 30.45c14.351 14.352 11.92 39.4-11.16 62.48z' /%3E%3Cpath d='M55.125 34.12l66.932 66.932' /%3E%3Cpath d='M126.293 29.093L155.385 0' /%3E%3Cpath d='M92.849 90.452l8.994-8.995' /%3E%3Cpath d='M67.296 64.9l8.994-8.995' /%3E%3C/g%3E%3C/svg%3E%0A");
+	background-repeat: no-repeat;
+}
