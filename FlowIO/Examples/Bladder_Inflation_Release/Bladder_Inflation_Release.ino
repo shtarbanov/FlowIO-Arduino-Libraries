@@ -35,6 +35,7 @@ bool buttonState = 0;         // current state of the button
 bool prevButtonState = 0;     // previous state of the button
 
 void setup(){
+  //flowio = FlowIO(GENERAL);
   flowio = FlowIO(INFLATION_PARALLEL); //This must be done the very first item to minimize the click on startup (Bug #44 on Github)  
   //NOTE: You cannot do the object initialization together with the declaration, because it will cause the 
   //hardware to not work fine, even though it will compile fine.
@@ -62,8 +63,7 @@ void loop() {
         break;
       case 3:
 //        delay(500); //delay to allow enough time to release button
-        flowio.openOutletValve();
-        flowio.setPorts(0b00011111);
+        flowio.startRelease(0b00011111);
         flowio.pixel(10,0,5);
         break;
     }
