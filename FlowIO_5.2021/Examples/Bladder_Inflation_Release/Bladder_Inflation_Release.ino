@@ -54,7 +54,9 @@ void loop() {
         break;
       case 1: //start inflating ports 2 and 4
 //        delay(500); //delay to allow enough time to release button
-        flowio.startInflation(0b00001010);
+        flowio.openInletValve();
+        flowio.openOutletValve();
+        flowio.setPorts(0b00001010);
         flowio.pixel(10,0,0);
         break;
       case 2:
