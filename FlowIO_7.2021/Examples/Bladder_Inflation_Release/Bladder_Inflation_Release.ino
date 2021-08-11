@@ -53,20 +53,23 @@ void loop() {
         flowio.pixel(1,1,1);
         break;
       case 1: //start inflating ports 2 and 4
-//        delay(500); //delay to allow enough time to release button
         flowio.openInletValve();
         flowio.openOutletValve();
         flowio.setPorts(0b00001010);
+        flowio.startPump(1);
         flowio.pixel(10,0,0);
         break;
-      case 2:
+      case 2: //also start the second pump. (in additiona to case 1)
+        flowio.startPump(2);
+        flowio.pixel(50,0,0);
+        break;
+      case 3:
         flowio.stopAction(0xFF);
         flowio.pixel(1,1,1);
         break;
-      case 3:
-//        delay(500); //delay to allow enough time to release button
+      case 4:
         flowio.startRelease(0b00011111);
-        flowio.pixel(10,0,5);
+        flowio.pixel(0,10,0);
         break;
     }
     prevMode = mode;
@@ -75,7 +78,7 @@ void loop() {
   if(buttonState != prevButtonState){ //if buttonstate has changed.
     if(buttonState == LOW)  //and if it is now pressed.
       mode += 1;
-      if(mode>3) mode=0;
+      if(mode>4) mode=0;
       delay(50); //debounce
   }
   prevButtonState = buttonState; 
