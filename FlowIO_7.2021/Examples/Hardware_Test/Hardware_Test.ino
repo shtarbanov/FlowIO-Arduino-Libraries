@@ -38,13 +38,14 @@ void setup(){
   flowio.pixel(1,1,1);
   Serial.begin(115200);
   while(!Serial) delay(10);
-  Serial.println("\n### --FlowIO Self Test Initialized - ###\n");
-  Serial.println("Enter the test number you want to run: (run them in order)");
+  Serial.println("\n### --FlowIO Self Test Initialized - ###");
+  Serial.println("------");
   Serial.println("0. Sensor Detection test");
   Serial.println("1. Valve Click test");
   Serial.println("2. Inflation test");
   Serial.println("3. Vacuum test");
   Serial.println("4. Battery test");
+  Serial.println("------\n");
 }
 
 void loop() {
@@ -54,32 +55,29 @@ void loop() {
       case 0: //we come here when we first start the system
         flowio.blueLED(1);
         sensorTest();
-        Serial.println("------\nPress UserSW to begin 1: 'Valve Click test'");
-        Serial.println(" - each valve will turn on and off sequentially. You should count 14 clicks.");
+        Serial.println("------\nType 1 or press UserSW button for: 'Valve Click test'");
+        Serial.println(" - Each valve will turn on and off sequentially. You should count 14 clicks.");
         break;
       case 1:
         flowio.blueLED(1);
         delay(500); //delay to allow enough time to release button
         valveClickTest();
-        Serial.println("Valve Click Test complete.");
-        Serial.println("------\nPress UserSW to begin 2: 'Inflation Pump Test'");
-        Serial.println(" - Run inflation pump for 100ms. Internal pressure should increase.");
+        Serial.println("------\nType 2 or press UserSW button for: 'Inflation Pump Test'");
+        //Serial.println(" - Run inflation pump for 100ms. Internal pressure should increase.");
         break;
       case 2:
         flowio.blueLED(1);
         delay(500); //delay to allow enough time to release button
         inflationPumpTest();
-        Serial.println("Inflation Pump Test complete.");
-        Serial.println("------\nPress UserSW button to start 3: 'Vacuum Pump Test'");
-        Serial.println(" - Run vacuum pump for 100ms. Internal pressure should decrease");
+        Serial.println("------\nType 3 or press UserSW button for: 'Vacuum Pump Test'");
+        //Serial.println(" - Run vacuum pump for 100ms. Internal pressure should decrease");
         break;
       case 3:
         flowio.blueLED(1);
         delay(500); //delay to allow enough time to release button
         vacuumPumpTest();
-        Serial.println("Vacuum Pump Test complete.");
-        Serial.println("------\nPress UserSW button to start 4: 'Battery Connection Test'");
-        Serial.println(" - Compares battery voltage with valves off and on and looks for drop");
+        Serial.println("------\nType 4 or press UserSW button for: 'Battery Connection Test'");
+        //Serial.println(" - Compares battery voltage with valves off and on and looks for drop");
         break;
       case 4:
         flowio.blueLED(1);
@@ -113,7 +111,7 @@ void loop() {
 }
 void batteryConnectionTest(){
   flowio.pixel(1,1,1);
-  Serial.println("Battery Connection Test in Progress...");
+  Serial.print("Battery Connection Test in Progress...");
   pinMode(batteryPin,INPUT);
   int vbat0 = analogRead(batteryPin);
   flowio.openInletValve();
@@ -123,7 +121,7 @@ void batteryConnectionTest(){
   flowio.closeInletValve();
   flowio.closeOutletValve();
   if(vbat1<vbat0){
-    Serial.println("Success");
+    Serial.println("...Success! (*_*) ");
   }
   else{
     Serial.println("Fail");
@@ -175,15 +173,15 @@ void sensorTest(){
   flowio.openPorts(0b00000011);
   delay(100);
   flowio.stopAction(0xFF);
-  Serial.println("Sensor Test in Progress....");
+  //Serial.println("Sensor Test in Progress....");
   flowio.activateSensor();
   if(flowio.readError()){
-    Serial.print("Detecting Sensor......FAILED. #$%@# Error ");
+    Serial.print("0. Sensor Detection Test......FAILED. #$%@# Error ");
     Serial.println(flowio.readError());
     flowio.pixel(1,0,0);
   }
   else{
-    Serial.print("Detecting Sensor......Success! :) ");
+    Serial.print("0. Sensor Detection Test......Success! (*_*) ");
     Serial.print("P = ");
     p0=flowio.getPressure(PSI);
     Serial.println(p0);
@@ -204,7 +202,7 @@ void inflationPumpTest(){
     flowio.pixel(1,0,0);
   }
   else{
-    Serial.println("...Success! :)");
+    Serial.println("...Success! (*_*) ");
     flowio.pixel(0,1,0);
   }
   flowio.stopPump(1);
@@ -228,7 +226,7 @@ void vacuumPumpTest(){
     flowio.pixel(1,0,0);
   }
   else{
-    Serial.println("...Success! :)");
+    Serial.println("...Success! (*_*) ");
     flowio.pixel(0,1,0);
   }
   flowio.stopPump(2);
