@@ -45,6 +45,7 @@ void setup(){
   Serial.println("2. Inflation test");
   Serial.println("3. Vacuum test");
   Serial.println("4. Battery test");
+  Serial.println("5. Power OFF");
   Serial.println("------\n");
 }
 
@@ -83,7 +84,12 @@ void loop() {
         flowio.blueLED(1);
         delay(500);
         batteryConnectionTest();
-        Serial.println("\n\n");
+        Serial.println("------\nType 5 or press UserSW button to: 'Power OFF'");
+        break;
+      case 5:
+        Serial.println("Powering OFF......\n\n");
+        flowio.powerOFF();
+        break;
     }
     prevMode = mode;
   }
@@ -91,7 +97,7 @@ void loop() {
   if(buttonState != prevButtonState){ //if buttonstate has changed.
     if(buttonState == LOW)  //and if it is now pressed.
       mode += 1;
-      if(mode>4) mode=0;
+      if(mode>5) mode=0;
       delay(50); //debounce
   }
   prevButtonState = buttonState; 
@@ -101,7 +107,7 @@ void loop() {
   while(Serial.available() > 0) {
     // read the incoming byte:
     char incomingByte = Serial.read();
-    if(incomingByte-'0' >= 0 && incomingByte-'0'<= 4){ //if it is an allowed mode
+    if(incomingByte-'0' >= 0 && incomingByte-'0'<= 5){ //if it is an allowed mode
       mode = incomingByte-'0'; //subtract ascii 0 to get the number the user wants to execute.
       Serial.println(mode);
       Serial.print("Starting test #");
@@ -109,6 +115,10 @@ void loop() {
     }
   } 
 }
+
+//############################--Function Definitions--##################################
+//######################################################################################
+
 void batteryConnectionTest(){
   flowio.pixel(1,1,1);
   Serial.print("Battery Connection Test in Progress...");
