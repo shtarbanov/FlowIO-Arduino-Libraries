@@ -10,6 +10,7 @@ void setup() {
 }
 
 void loop() {
+    module16inputs.setSettleTime(750);
     module16inputs.read16ChannelsInto(adcValues);
     for (int i = 0; i < 16; i++) {
         Serial.print(adcValues[i]);

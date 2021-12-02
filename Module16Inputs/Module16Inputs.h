@@ -36,7 +36,7 @@ private:
 
     uint8_t _A4 = A4;
     uint8_t _A5 = A5;
-    uint32_t settleTime = 1;
+    uint32_t settleTime = 750;
     SampleAveraging sampleAveraging = DOUBLE_SAMPLING;
 
     //The following arrays are for the moving average calculations.

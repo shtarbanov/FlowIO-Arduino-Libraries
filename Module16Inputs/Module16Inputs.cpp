@@ -68,10 +68,12 @@ uint16_t Module16Inputs::readChannel(uint8_t n) {
     uint8_t analogPin = (n == 1 || n == 2 || n == 5 || n == 6 || n == 9 || n == 10 || n == 13 || n == 14) ? A5 : A4;
     setMuxesChannel(n);
     uint32_t sample = 0;
+    // Sample once to draw access capacitance.
+    analogRead(analogPin);
     // SampleAveraging can be either 1, 2 or 4
     for (int i = 0; i < (uint8_t)sampleAveraging; i++) {
-        sample += analogRead(analogPin);
         delayMicroseconds(settleTime);
+        sample += analogRead(analogPin);
     }
     // If we have a difference channel set, sample that one also and diff the result.
     if (diffChannel > 0 && diffChannel <= 16 && diffChannel != n) {
