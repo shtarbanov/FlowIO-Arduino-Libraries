@@ -17,7 +17,8 @@
   "homepage": "https://softrobotics.io",
   "export": {
     "include": [
-      "FlowIO_7.2021/*"
+      "FlowIO_10.2021/*",
+      "Module16Inputs"
       ]
   },
   "frameworks": ["arduino"],
