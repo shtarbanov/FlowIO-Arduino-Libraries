@@ -1,0 +1,21 @@
+2021.12.23
+- Renamed "_valveOpenedAt[]" to "_startTimes[]" in the .h and the Driver.
+
+2021.12.24.1
+- Previously, the "_startTimes[]" array was serving a double duty where in
+  addition to holding the start times it also held information about whether
+  a valve was already in an power optmized ON state. Now this secondary
+  functionality has been dedicated to a boolean array named _powerOptimized[].
+- The variable type of _startTimes[] array was changed from int to uint32_t
+  because it no longer needs to hold a negative value.
+- All of these changes were in the .h and Driver files only.
+
+2021.12.24.2
+- Added two more positions to the _startTimes[] array for the two pumps.
+- Record the start times of the pumps into the array.
+- Reset the start time of a pump to 0 when the pumps is stopped.
+- All of these changes were in the .h and Driver files only.
+
+2021.12.24.3
+- Add the getter: uint32_t getStartTimeOf(Component name). If a component is
+  currently active, this will return its starting time, else it will return 0.
