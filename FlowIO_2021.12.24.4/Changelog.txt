@@ -1,0 +1,46 @@
+2021.12.23
+- Renamed "_valveOpenedAt[]" to "_startTimes[]" in the .h and the Driver.
+
+2021.12.24.1
+- Previously, the "_startTimes[]" array was serving a double duty where in
+  addition to holding the start times it also held information about whether
+  a valve was already in an power optmized ON state. Now this secondary
+  functionality has been dedicated to a boolean array named _powerOptimized[].
+- The variable type of _startTimes[] array was changed from int to uint32_t
+  because it no longer needs to hold a negative value.
+- All of these changes were in the .h and Driver files only.
+
+2021.12.24.2
+- Added two more positions to the _startTimes[] array for the two pumps.
+- Record the start times of the pumps into the array.
+- Reset the start time of a pump to 0 when the pumps is stopped.
+- All of these changes were in the .h and Driver files only.
+
+2021.12.24.3
+- Add the getter: uint32_t getStartTimeOf(Component name). If a component is
+  currently active, this will return its starting time, else it will return 0.
+
+2021.12.24.4
+- Updates the keywords.txt to include all literals and functions defined till now.
+- Add the inflateP() function definition in FeedbackControl.cpp.
+- Add the inflatePcomplete flag in .h header.
+- Put the time depended methods in FeedforwardControl.cpp
+- Fixed a bug where inflateP() did not display the correct inflation time because I was
+	reading the start time after the stopAction() function, which resets the start time to 0.
+- Fixed an issue where the sensor does not work after reset button is pressed, by placing the 
+	activateSensor() function inside a while loop instead of an if block. Activation always 
+	fails the first time, and then succeeds the second time, hence why we need the while loop.	
+- Updated the Hardware Test example with the fix for sensor failure after reset. 
+- Updated all other examples with the fix for the sensor failure after reset.
+
+
+
+
+- TODO: Test the inflateP method in all cases imaginable. Especially focus on testing it
+  in the case where inflation is already happening on the same ports to see if the time
+  it returns add the additional inflation time prior to the first invocation of he function.
+  Test if you can reinvoke inflateP on a different port after you reset the inflatePcomplete flag.
+  Test what happens if you invoke inflateP twice in the same iteration but with different ports.
+    What should happen in such a case is the first inflateP() in the loop will barely cause anything
+  because it will get overwritten by the next one in microseconds. Thus only the second inflateP will
+  have an effect. 
