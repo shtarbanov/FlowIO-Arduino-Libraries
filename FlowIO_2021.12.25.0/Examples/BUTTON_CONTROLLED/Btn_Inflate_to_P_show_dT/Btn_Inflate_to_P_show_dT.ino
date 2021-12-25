@@ -17,7 +17,7 @@ bool prevButtonState = 0;     // previous state of the button
 bool activeFlag = 0;
 
 uint32_t inflationTime = 0;
-uint8_t ports = 0b00000011; //port 2.
+uint8_t ports = 0b00000010; //port 2.
 
 bool serialOneTimeFlag=false; 
 

@@ -30,6 +30,12 @@
       the time returned will include those 2 extra seconds.
   ***************************************************************************************************/
   uint32_t FlowIO::inflateP(uint8_t ports, float pMax, Unit pUnit, uint8_t pwmValue){ //(nonblocking)
+    ports = ports & 0b00011111; //clear the upper 3 bits in case they are not 0. They must be 0 for
+    //our comparison operations below to work as expected.
+    //-------------------------------------------------------
+    //If user invokes inflateP() while another one with differnt ports is already running, ignore it:
+    if(_inflatePrunning && (_hardwareState & 0b00011111)!= ports) return 1; //indicates a task is in progress.
+    //-------------------------------------------------------
     //If the task has already completed in a previous iteration, return 0 and don't do anything.
     if(inflatePcomplete==true){ //this flag is defined in the FLowIO.h file and is false by default.
       return 0; //Indicates that the task has completed.
@@ -37,6 +43,7 @@
       //If we are not inflating OR the active ports do NOT match 'ports' argument, start the inflation:
       if(getHardwareStateOf(INLET)==0 || ((_hardwareState & 0b00011111) ^ ports)!=0){
         startInflation(ports, pwmValue);
+        _inflatePrunning = true;
         return 1; //indicates that the task is now running.
       }
       //Otherwise, if we are already inflating on the appropriate ports:
@@ -48,6 +55,7 @@
           //because that function will reset the start time to 0.
           uint32_t dt = millis() - getStartTimeOf(INLET);
           stopAction(ports); //resets the startTimes to 0.
+          _inflatePrunning = false;
           inflatePcomplete = true; //the inflation is now completed.
           return dt; //return the time to inflate.
         }

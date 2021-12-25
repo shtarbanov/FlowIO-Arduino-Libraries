@@ -34,33 +34,17 @@
 - Updated all other examples with the fix for the sensor failure after reset.
 
 2021.12.25.0
-- TODO: Prevent users from running a sequence of inflateP() functions at different ports.
-  I can have an _inflatePrunning flag, and if that flag is on, and if the active ports are different from
-  the 'ports' provided, then I will just ignorethat function, because it means the user is trying to run Another
-  inflateP function with different ports.
-
-- TODO: Users will put two of those functions in a sequence with different ports. Have some protections
-  to handle such a scenario. For example, you can check if an InflateP function is already running, and
-  then ignore another inflateP function that uses different ports. Or you can just open another port for the
-  second inflateP function but that will be bad. The intuitive behavior is that you can call two of these
-  functions sequentially so I need to change the implementation such that this is no longer intutive.
-  Start by considering the problem: How do I inflate 2 ports to two different pressures? I should have a
-  a function that allows me to specify the desired pressures for all ports all at once.
-  inflateP
-  inflateP_diff -- allows you to specify different maximum pressures for different ports. Once the lowest
-  pressure is reached, it will close that port.
-  But even my current inflateP function allows me to set the same pressure on multiple ports.
+- added ports = ports & 0b00011111 to inflateP() so that comparison won't fail even if MSBs are not 000.
+- If a user invokes inflateP(), while inflateP() is still running at a different port, ignore the attempt.
+  This is done using the _inflatePrunning flag and comparing the status byte with the 'ports' argument
+  each time the inflatP() function is invoked. Tested and confirmed.
 
 
-
-- TODO: Test if you can reinvoke inflateP on a different port after you reset the inflatePcomplete flag.
-  Test what happens if you invoke inflateP twice in the same iteration but with different ports.
-    What should happen in such a case is the first inflateP() in the loop will barely cause anything
-  because it will get overwritten by the next one in microseconds. Thus only the second inflateP will
-  have an effect.
-
+2021.12.25.1
+- TODO:  inflateP_diff -- allows you to specify different maximum pressures for different ports. Once the lowest
 - TODO: Test with different pressure units like BAR
--
+- TODO: releaseP() and vacuumP
+- TODO: inflateT() nonblocking similar to inflateP().
 - TODO: Add a global setPressureLimits() function to the library. You can call this function at the end of the main loop repeatedly to check if an ongoing action is at a limit and then stop it. But that would be
 bad because a user may put a delay in his code and this function would not be reached on time. The function
 should NOT be a repeatedly invoked function, but rather it should be invoked once, and it should act internally to the action functions. The action functions should themselves check if a pressure limit has been set, and if yes, they should monitor the pressure as they are performing an action. If a pressure limit
