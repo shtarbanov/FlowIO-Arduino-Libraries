@@ -1,0 +1,89 @@
+############### Datatypes ###############----KEYWORD1
+FlowIO	KEYWORD1
+Unit	KEYWORD1
+Configuration	KEYWORD1
+Component	KEYWORD1
+
+######### Methods and Functions #########----KEYWORD2
+getConfig	KEYWORD2
+setConfig	KEYWORD2
+
+activateSensor	KEYWORD2
+setPressureUnit	KEYWORD2
+getPressure	KEYWORD2
+requestPressure	KEYWORD2
+
+startPump		KEYWORD2
+stopPump		KEYWORD2
+openInletValve		KEYWORD2
+closeInletValve		KEYWORD2
+openOutletValve		KEYWORD2
+closeOutletValve	KEYWORD2
+
+blueLED 		KEYWORD2
+pixel			KEYWORD2
+powerOFF 		KEYWORD2
+
+setPorts 		KEYWORD2
+openPorts		KEYWORD2
+closePorts		KEYWORD2
+
+optimizePower		KEYWORD2
+
+getHardwareState	KEYWORD2
+getHardwareStateOf	KEYWORD2
+
+raiseError		KEYWORD2
+readError		KEYWORD2
+
+command 		KEYWORD2
+
+startInflation		KEYWORD2
+startInflationHalfCapacity	KEYWORD2
+startVacuum		KEYWORD2
+startVacuumHalfCapacity	KEYWORD2
+startRelease		KEYWORD2
+stopAction		KEYWORD2
+
+inflateT		KEYWORD2
+inflate2xT		KEYWORD2
+vacuumT			KEYWORD2
+vacuum2xT		KEYWORD2
+releaseT 		KEYWORD2
+
+inflateP		KEYWORD2
+inflateP_diff		KEYWORD2
+inflate2xP		KEYWORD2
+vacuumP			KEYWORD2
+vacuum2xP		KEYWORD2
+releaseP		KEYWORD2
+
+getStartTimeOf		KEYWORD2
+
+############### Constants ###############----LITERAL1
+GENERAL			LITERAL1
+INFLATION_SERIES	LITERAL1
+INFLATION_PARALLEL	LITERAL1
+VACUUM_SERIES		LITERAL1
+VACUUM_PARALLEL		LITERAL1
+
+PSI	LITERAL1
+ATM	LITERAL1
+KPA	LITERAL1
+PA	LITERAL1
+MBAR	LITERAL1
+
+PORT1	LITERAL1
+PORT2	LITERAL1
+PORT3	LITERAL1
+PORT4	LITERAL1
+PORT5	LITERAL1
+INLET	LITERAL1
+OUTLET	LITERAL1
+PUMP1	LITERAL1
+PUMP2	LITERAL1
+LEDRED	LITERAL1
+LEDBLUE	LITERAL1
+SENSOR	LITERAL1
+
+inflatePcomplete	LITERAL1
