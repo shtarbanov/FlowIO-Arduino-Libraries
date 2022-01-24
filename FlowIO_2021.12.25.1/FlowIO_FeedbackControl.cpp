@@ -77,3 +77,45 @@
       }
     }
   }
+  /*This function allows you to inflate multiple ports simultaneously to different pressures.
+  When invoking the function, You must enter values for all 5 pressures, which are mapped to the 5 ports.
+  However, if you set a value to 0 then that port will simply be ignored. This function will NOT
+  return anything which will make its implementation much simpler.
+  */
+  void FlowIO::inflateP_diff(uint8_t ports, float pMax1, float pMax2, float pMax3, float pMax4, float pMax5, Unit pUnit, uint8_t pwmValue){
+    ports = ports & 0b00011111; //clear the upper 3 bits in case they are not 0. They must be 0 for
+    //our comparison operations below to work as expected.
+    //-------------------------------------------------------
+    //If user invokes inflateP() while another one with differnt ports is already running, ignore it:
+    if(_inflatePrunning && (_hardwareState & 0b00011111)==0) _inflatePrunning=false;
+    if(_inflatePrunning && (_hardwareState & 0b00011111)!= ports) return;
+    //-------------------------------------------------------
+    //If the task has already completed in a previous iteration, return 0 and don't do anything.
+    if(inflatePcomplete==true){ //this flag is defined in the FLowIO.h file and is false by default.
+      return;
+    }else{
+      //If we are not inflating OR the active ports do NOT match 'ports' argument, start the inflation:
+      if(getHardwareStateOf(INLET)==0 || ((_hardwareState & 0b00011111) ^ ports)!=0){
+        startInflation(ports, pwmValue);
+        _inflatePrunning = true;
+        return;
+      }
+      //Otherwise, if we are already inflating on the appropriate ports:
+      else{
+        //check if any pMax has been reached, and then close corresponding port
+        float pVal = getPressure(pUnit);
+        if(pVal>=pMax1 && getHardwareStateOf(PORT1))  closePorts(0b00000001);
+        if(pVal>=pMax2 && getHardwareStateOf(PORT2))  closePorts(0b00000010);
+        if(pVal>=pMax3 && getHardwareStateOf(PORT3))  closePorts(0b00000100);
+        if(pVal>=pMax4 && getHardwareStateOf(PORT4))  closePorts(0b00001000);
+        if(pVal>=pMax5 && getHardwareStateOf(PORT5))  closePorts(0b00010000);
+        //Now check if we have closed all the ports, and if yes, then we are done.
+        if((_hardwareState & 0b00011111)==0){
+          stopAction(ports);
+          _inflatePrunning = false;
+          inflatePcomplete=true;
+          return;
+        }
+      }
+    }
+  }

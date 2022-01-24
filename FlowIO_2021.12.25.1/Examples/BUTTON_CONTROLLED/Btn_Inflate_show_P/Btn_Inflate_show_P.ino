@@ -17,9 +17,10 @@ bool prevButtonState = 0;     // previous state of the button
 bool activeFlag = 0;
 
 uint32_t inflationTime = 0;
-uint8_t ports = 0b00000010; //port 2.
+uint8_t ports = 0b00000100; //port 3.
 
 bool serialOneTimeFlag=false; 
+uint32_t lastTime = 0;
 
 FlowIO flowio;
 
@@ -40,38 +41,28 @@ void setup(){
 void loop() {
   if(Serial && serialOneTimeFlag==false){
     serialOneTimeFlag=true;
-    Serial.println("Inflate to P and show dT");
-  }
-  while(flowio.readError()!=0){
-    Serial.print("Error: ");
-    Serial.println(flowio.readError());
-    delay(1000);
+    Serial.println("Inflate and show P");
   }
   buttonState = digitalRead(btnPin);
   if(buttonState != prevButtonState){ //if buttonstate has changed.
     if(buttonState == LOW)  //and if it is now pressed.
       activeFlag = !activeFlag;
       if(activeFlag){
-        flowio.pixel(10,0,0);
+        flowio.pixel(0,0,10);
+        flowio.startInflation(ports);
       }
       else{
         flowio.pixel(1,1,1);
         flowio.stopAction(ports);
-        //if inflation is complete, reset the flag
-        if(flowio.inflatePcomplete) flowio.inflatePcomplete=false;
       }
   }
   prevButtonState = buttonState; 
   flowio.optimizePower(150,1000);
 
   //This will get invoked on each iteration of the loop:
-  if(activeFlag){
-    inflationTime = flowio.inflateP(ports,30,PSI); //returns 0 when complete, 1 when running, time when stopping.
-    if(inflationTime>1){
-      Serial.print("T(ms) = ");
-      Serial.println(inflationTime);
-      Serial.print("P(psi) = ");
-      Serial.println(flowio.getPressure(PSI));
-    }
+  if(activeFlag && (millis()-lastTime)>100){
+    Serial.print("Pressure = ");
+    Serial.println(flowio.getPressure(PSI));
+    lastTime=millis();
   }
 }

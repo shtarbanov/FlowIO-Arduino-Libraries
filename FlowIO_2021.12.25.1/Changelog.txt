@@ -39,12 +39,17 @@
   This is done using the _inflatePrunning flag and comparing the status byte with the 'ports' argument
   each time the inflatP() function is invoked. Tested and confirmed.
 - Fixed an issue where if I press the button to stop inflateP and then press it again to resume, it does
-  not resume. his was fixed by resetting the _inflatePrunning flag to false at the beginning of inflateP 
+  not resume. his was fixed by resetting the _inflatePrunning flag to false at the beginning of inflateP
   if device is idle.
 
 
 2021.12.25.1
-- TODO:  inflateP_diff -- allows you to specify different maximum pressures for different ports. Once the lowest
+- inflateP_diff -- allows you to specify different maximum pressures for different ports. Once the lowest
+  specified pressure is reached, the corresponding port valve is closed but inflation continues until all
+  other requested ports are at their specified pressures.
+BUG: The inflation does not stop even when the pressure is reached.
+
+
 - TODO: Test with different pressure units like BAR
 - TODO: releaseP() and vacuumP
 - TODO: inflateT() nonblocking similar to inflateP().
