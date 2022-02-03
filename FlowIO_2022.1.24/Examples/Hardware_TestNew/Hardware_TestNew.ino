@@ -1,5 +1,4 @@
-/*
- * TODO: Have test that autochecks all the I/O ports as well. You can open one port at a time and check if there is 
+/* TODO: Have test that autochecks all the I/O ports as well. You can open one port at a time and check if there is 
  * difference in the pressure when the port is opened and when closed. Then at the end, you can report exactly which 
  * port is problematic if any. You will not have to count clicks then, and then the full test will be automated.
  * 
@@ -21,6 +20,8 @@
 FlowIO flowio;
 int mode = 0;
 int prevMode = -1; //making this different so we enter the state machine on first start.
+bool repeatTest = false;
+
 
 bool buttonState = 0;         // current state of the button
 bool prevButtonState = 0;     // previous state of the button
@@ -48,11 +49,16 @@ void setup(){
   Serial.println("4. Battery test");
   Serial.println("5. Leak test");
   Serial.println("6. Power OFF");
+  Serial.println("Type r after a test completes to repeat it.");
   Serial.println("------\n");
 }
 
 void loop() {
   flowio.pixel(1,1,1);
+  if(repeatTest==true){
+    prevMode=-1; //reset the prevMode variable to assume that the mode has changed
+    repeatTest = false;
+  }
   if(mode != prevMode){ //Only execute this code if the mode has changed.
     switch(mode){
       case 0: //we come here when we first start the system
@@ -87,9 +93,10 @@ void loop() {
         delay(500);
         batteryConnectionTest();
         Serial.println("------\nNext Test: 'Manually Check for sensor leaks'");
-        Serial.println("Before running this test, disconnect the pump module and connect a syringe to the inelt valve (rightmost)");
-        Serial.println("When the test starts, the inlet valve will open and stay open for 20 seconds. During that time, try pushing");
-        Serial.println("air with the syringe into the inlet valve to check if there are any leaks. Type 5 when ready to begin the test."); 
+        Serial.println("Before running this test, disconnect the pump module and connect a syringe to the");
+        Serial.println("inelt valve (rightmost). When the test starts, the inlet valve will open and stay");
+        Serial.println("open for 20 seconds. During that time, try pushing air with the syringe into the");
+        Serial.println("inlet valve to check if there are any leaks. Type 5 to begin this test."); 
         break;
       case 5:
         flowio.blueLED(1);
@@ -102,6 +109,7 @@ void loop() {
         flowio.powerOFF();
         break;
     }
+    if(repeatTest) repeatTest=false;
     prevMode = mode;
   }
   buttonState = digitalRead(btnPin);
@@ -118,7 +126,8 @@ void loop() {
   while(Serial.available() > 0) {
     // read the incoming byte:
     char incomingByte = Serial.read();
-    if(incomingByte-'0' >= 0 && incomingByte-'0'<= 6){ //if it is an allowed mode
+    if(incomingByte=='r') repeatTest=true;
+    else if(incomingByte-'0' >= 0 && incomingByte-'0'<= 6){ //if it is an allowed mode
       mode = incomingByte-'0'; //subtract ascii 0 to get the number the user wants to execute.
       Serial.println(mode);
       Serial.print("Starting test #");
@@ -143,6 +152,7 @@ void batteryConnectionTest(){
   flowio.closeOutletValve();
   if(vbat1<vbat0){
     Serial.println("...Success! (*_*) ");
+    Serial.println("Battery test completed. Type r to repeat it.");
   }
   else{
     Serial.println("Fail");
@@ -152,15 +162,15 @@ void manualLeakTest(){
   flowio.pixel(1,1,1);
   flowio.openInletValve();
   Serial.println("Manual Leak Test in Progress...");
-  Serial.println("You have 30 seconds to check for leaks on the inlet valve.");
+  Serial.println("You have 20 seconds to check for leaks on the inlet valve.");
   Serial.print("Seconds remaining: ");
-  for(int i=30; i>0; i--){
-    Serial.print(i);
-    Serial.print(", ");
+  for(int i=20; i>=0; i--){
+    if(i%5==0) Serial.print(i);
+    Serial.print(".");
     delay(1000);
   }
   flowio.closeInletValve();
-  Serial.println("Leak Test completed.");
+  Serial.println("\nLeak Test completed. Type r to repeat it.");
   flowio.pixel(0,1,0);
 }
 void valveClickTest(){
@@ -201,6 +211,7 @@ void valveClickTest(){
   delay(500);
   flowio.closeInletValve();
   delay(1000);
+  Serial.println("Valve test completed. Type r to repeat it.");  
   //flowio.pixel(0,0,0);
 }
 void sensorTest(){
@@ -221,6 +232,7 @@ void sensorTest(){
   Serial.print("P = ");
   p0=flowio.getPressure(PSI);
   Serial.println(p0);
+  Serial.println("Type r to repeat the test.");  
   flowio.pixel(0,1,0);
 }
 void inflationPumpTest(){
@@ -240,6 +252,7 @@ void inflationPumpTest(){
     Serial.println("...Success! (*_*) ");
     flowio.pixel(0,1,0);
   }
+  Serial.println("Type r to repeat the test.");  
   flowio.stopPump(1);
   //release the pressure and close the valves:
   flowio.openOutletValve();
@@ -264,6 +277,7 @@ void vacuumPumpTest(){
     Serial.println("...Success! (*_*) ");
     flowio.pixel(0,1,0);
   }
+  Serial.println("Type r to repeat the test.");  
   flowio.stopPump(2);
   //release the pressure and close the valves
   flowio.openInletValve();
