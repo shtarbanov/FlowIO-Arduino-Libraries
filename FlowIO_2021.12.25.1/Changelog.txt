@@ -1,0 +1,64 @@
+2021.12.23
+- Renamed "_valveOpenedAt[]" to "_startTimes[]" in the .h and the Driver.
+
+2021.12.24.1
+- Previously, the "_startTimes[]" array was serving a double duty where in
+  addition to holding the start times it also held information about whether
+  a valve was already in an power optmized ON state. Now this secondary
+  functionality has been dedicated to a boolean array named _powerOptimized[].
+- The variable type of _startTimes[] array was changed from int to uint32_t
+  because it no longer needs to hold a negative value.
+- All of these changes were in the .h and Driver files only.
+
+2021.12.24.2
+- Added two more positions to the _startTimes[] array for the two pumps.
+- Record the start times of the pumps into the array.
+- Reset the start time of a pump to 0 when the pumps is stopped.
+- All of these changes were in the .h and Driver files only.
+
+2021.12.24.3
+- Add the getter: uint32_t getStartTimeOf(Component name). If a component is
+  currently active, this will return its starting time, else it will return 0.
+
+2021.12.24.4
+- Updates the keywords.txt to include all literals and functions defined till now.
+- Add the inflateP() function definition in FeedbackControl.cpp.
+- Add the inflatePcomplete flag in .h header.
+- Put the time depended methods in FeedforwardControl.cpp
+- Fixed a bug where inflateP() did not display the correct inflation time because I was
+	reading the start time after the stopAction() function, which resets the start time to 0.
+- Fixed an issue where the sensor does not work after reset button is pressed, by placing the
+	activateSensor() function inside a while loop instead of an if block. Activation always
+	fails the first time, and then succeeds the second time, hence why we need the while loop.
+- Updated the Hardware Test example with the fix for sensor failure after reset.
+- Updated all other examples with the fix for the sensor failure after reset.
+
+2021.12.25.0
+- added ports = ports & 0b00011111 to inflateP() so that comparison won't fail even if MSBs are not 000.
+- If a user invokes inflateP(), while inflateP() is still running at a different port, ignore the attempt.
+  This is done using the _inflatePrunning flag and comparing the status byte with the 'ports' argument
+  each time the inflatP() function is invoked. Tested and confirmed.
+- Fixed an issue where if I press the button to stop inflateP and then press it again to resume, it does
+  not resume. his was fixed by resetting the _inflatePrunning flag to false at the beginning of inflateP
+  if device is idle.
+
+
+2021.12.25.1
+- inflateP_diff -- allows you to specify different maximum pressures for different ports. Once the lowest
+  specified pressure is reached, the corresponding port valve is closed but inflation continues until all
+  other requested ports are at their specified pressures.
+BUG: The inflation does not stop even when the pressure is reached.
+
+
+- TODO: Test with different pressure units like BAR
+- TODO: releaseP() and vacuumP
+- TODO: inflateT() nonblocking similar to inflateP().
+- TODO: Add a global setPressureLimits() function to the library. You can call this function at the end of the main loop repeatedly to check if an ongoing action is at a limit and then stop it. But that would be
+bad because a user may put a delay in his code and this function would not be reached on time. The function
+should NOT be a repeatedly invoked function, but rather it should be invoked once, and it should act internally to the action functions. The action functions should themselves check if a pressure limit has been set, and if yes, they should monitor the pressure as they are performing an action. If a pressure limit
+has not been set, then the action functions do not need to monitor the pressure. NOTE: The pressure limits
+will only have an effect on the API functions, but NOT on the driver functions. Thus, a user can still exceed this limit if they choose to operate at the driver level. I can even have the pressure limit be added
+as an optional argument to my action functions. In that way, I won't need to add a separate function for the
+limit. And moreover, I won't even need the inflateP function in such a case. But no matter what method, the pressure monitoring should happend be happening once per main loop iteration at best. So if a user puts a
+delay in his code, that would also delay the pressure monitoring. Unless we make the pressure monitor be
+an interrupt that we can run on a fixed schedule without worrying about execution delays of user delays.
