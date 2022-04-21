@@ -1,3 +1,5 @@
+#include <Adafruit_TinyUSB.h> // for Serial
+
 /* TODO: Have test that autochecks all the I/O ports as well. You can open one port at a time and check if there is 
  * difference in the pressure when the port is opened and when closed. Then at the end, you can report exactly which 
  * port is problematic if any. You will not have to count clicks then, and then the full test will be automated.
@@ -95,7 +97,7 @@ void loop() {
         Serial.println("------\nNext Test: 'Manually Check for sensor leaks'");
         Serial.println("Before running this test, disconnect the pump module and connect a syringe to the");
         Serial.println("inelt valve (rightmost). When the test starts, the inlet valve will open and stay");
-        Serial.println("open for 20 seconds. During that time, try pushing air with the syringe into the");
+        Serial.println("open for 60 seconds. During that time, try pushing air with the syringe into the");
         Serial.println("inlet valve to check if there are any leaks. Type 5 to begin this test."); 
         break;
       case 5:
@@ -162,9 +164,9 @@ void manualLeakTest(){
   flowio.pixel(1,1,1);
   flowio.openInletValve();
   Serial.println("Manual Leak Test in Progress...");
-  Serial.println("You have 20 seconds to check for leaks on the inlet valve.");
+  Serial.println("You have 60 seconds to check for leaks on the inlet valve.");
   Serial.print("Seconds remaining: ");
-  for(int i=20; i>=0; i--){
+  for(int i=60; i>=0; i--){
     if(i%5==0) Serial.print(i);
     Serial.print(".");
     delay(1000);

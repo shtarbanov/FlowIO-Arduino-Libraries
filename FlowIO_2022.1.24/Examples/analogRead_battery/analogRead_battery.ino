@@ -1,3 +1,5 @@
+#include <Adafruit_TinyUSB.h> // for Serial
+
 #define VBAT_PIN          A6            //A7 for nrf52832, A6 for nrf52840
 
 float getVBAT_mV() {
