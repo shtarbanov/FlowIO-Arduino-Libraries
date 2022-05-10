@@ -11,7 +11,7 @@ void setup(){
   flowio.blueLED(HIGH);
   flowio.pixel(1,1,1);
   Serial.begin(115200);
-  while(!Serial) delay(10); //"Serial" returns true whenever we press the serial monitor button.
+  //while(!Serial) delay(10); //"Serial" returns true whenever we press the serial monitor button.
   /*This means that we will be stull in this infinite loop UNTIL WE OPEN THE SERIAL MONITOR!!! */
   
 }
