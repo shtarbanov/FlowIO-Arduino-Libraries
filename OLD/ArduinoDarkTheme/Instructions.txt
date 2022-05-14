@@ -1,0 +1,4 @@
+Go to "ProgramFiles(86)/Arduino/lib" then replace the "theme" folder with the one from this directory. 
+	(If the version has changed too much by the time you are reading this, what really matter inside the "theme" folder are "theme.txt" and "syntax/dark.xml". See what is inside theme.txt and then copy the lines from this file into the "theme.txt" of the arduino installation. 
+	In the arduino installation folder, then go to "lib/theme/syntax" and change the name of "dark.xml" to "default.xml" after first deleting 
+	the original default.xml that is already there.)
