@@ -20,7 +20,8 @@ enum Unit : uint8_t{
 	PSI, ATM, MBAR, KPA, PA
 };
 enum Configuration : uint8_t{ //pneumatic configuration mode
-	GENERAL, INFLATION_SERIES, VACUUM_SERIES, INFLATION_PARALLEL, VACUUM_PARALLEL
+	GENERAL, INFLATION_SERIES, VACUUM_SERIES, INFLATION_PARALLEL, VACUUM_PARALLEL,
+    REGULATED_PRESSURE, REGULATED_VACUUM
 };
 
 enum Component : uint8_t{
@@ -34,6 +35,7 @@ private:
 	uint8_t _portValvePins[5]={12,11,10,9,6};	//left pin is port 1.
 	uint8_t _inletValvePin=5; //(right) valve
 	uint8_t _outletValvePin=14; //(left) valve
+    uint8_t _regulatorPins[4] = {17, 18, 19, 26};
 	//NOTE: It is tempting to consolidate the valve pins into a single array. But having things this way allows
 	//me to change which pins I use for inlet and outet without having to change anything else in the code.
 	//Another reason we want the ports to start from 0 is because we want the last 5 bits of the "ports"
@@ -44,7 +46,7 @@ private:
 	//Pressure Sensor
 	TwoWire *_i2c;
 	bool _i2cInitialized=false; //becomes true when the activateSensor() function has been executed.
-  Unit _pressureUnit=PSI;
+    Unit _pressureUnit=PSI;
 	uint16_t C[8];
 	uint32_t D1_pres, D2_temp;
 	int32_t TEMP;
@@ -143,6 +145,7 @@ public:
 	void openPorts(uint8_t ports); //Opens the ports with 1. Leaves the ports with ports with 0 unchanged.
 	void closePorts(uint8_t ports); //Closes ports with 1. Leaves the ports with 0 unchanged.
 	void optimizePower(uint8_t holdPWM, uint16_t thresholdTime=500);
+    void setRegulator(uint8_t pwm);
 
 	//COMMAND CONTROL
 	//TODO: The command based control can only return pressure, but has no ways of

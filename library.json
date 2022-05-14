@@ -1,0 +1,25 @@
+{
+  "name": "FlowIO-Arduino-API",
+  "version": "7.2021",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/Luftzig/FlowIO-Arduino-APIs-and-Libraries.git"
+  },
+  "description": "Low level APIs for FlowIO (softrobotics.io)",
+  "authors": [
+    {
+      "name": "Ali Shtrabanov",
+      "email": "softrobotics.io@gmail.com",
+      "maintainer": true
+    }
+    ],
+  "homepage": "https://softrobotics.io",
+  "export": {
+    "include": [
+      "FlowIO_7.2021/*"
+      ]
+  },
+  "frameworks": ["arduino"],
+  "platforms": ["nordicnrf52"]
+}
