@@ -53,8 +53,7 @@ void setup(){
   Serial.println("4. Battery test");
   Serial.println("5. Leak test");
   Serial.println("6. Power OFF");
-  Serial.println("Type r after a test completes to repeat it.");
-  Serial.println("------\n");
+  Serial.println("Type r after a test completes to repeat it. \n------");
 }
 
 void loop() {
@@ -226,13 +225,13 @@ void sensorTest(){
   flowio.stopAction(0xFF);
   //Serial.println("Sensor Test in Progress....");
   while(flowio.activateSensor()==false){
-    Serial.print("0. Sensor Detection Test......FAILED.");
+    Serial.print("\n--->  0. Sensor Detection Test......FAILED. Error = ");
     Serial.println(flowio.readError());
     flowio.pixel(1,0,0);
     delay(10);
   }
   flowio.pixel(1,1,1);
-  Serial.print("0. Sensor Detection Test......Success! (*_*) ");
+  Serial.print("\n--->  0. Sensor Detection Test......Success! (*_*) ");
   Serial.print("P = ");
   p0=flowio.getPressure(PSI);
   Serial.println(p0);
