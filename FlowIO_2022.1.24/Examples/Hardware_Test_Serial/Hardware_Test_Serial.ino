@@ -164,18 +164,33 @@ void batteryConnectionTest(){
 void manualLeakTest(){
   flowio.pixel(1,1,1);
   flowio.openInletValve();
+  flowio.setPorts(0b00000000);
   Serial.println("Manual Leak Test in Progress...");
   Serial.println("You have 60 seconds to check for leaks on the inlet valve.");
   Serial.print("Seconds remaining: ");
   for(int i=60; i>=0; i--){
-    if(i%5==0) Serial.print(i);
-    Serial.print(".");
+    //Output time every 5 sec and dot every second.
+    //if(i%5==0) Serial.print(i);
+    //Serial.print(".");
+    //delay(1000);
+    
+    //Output pressure every second
+    Serial.print(i);
+    Serial.print(": P = ");
+    pinf=flowio.getPressure(PSI);
+    Serial.println(pinf);
     delay(1000);
   }
   flowio.closeInletValve();
   Serial.println("\nLeak Test completed. Type r to repeat it.");
   flowio.pixel(0,1,0);
 }
+
+
+
+
+
+
 void valveClickTest(){
   flowio.pixel(1,1,1);
   Serial.print("Valve Click Test in Progress....");
