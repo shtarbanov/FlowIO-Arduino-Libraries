@@ -1,3 +1,4 @@
+#include <bluefruit.h>
 #include <Module16Inputs.h>
 Module16Inputs module16inputs;
 uint16_t adcValues[16];
