@@ -1,7 +1,5 @@
 /* Written by Ali Shtarbanov */
-
-#ifndef FlowIO_h
-#define FlowIO_h
+#pragma once //Header files tutorial: https://www.youtube.com/watch?v=9RJTQmK0YPI
 
 #include "Arduino.h"
 #include "Wire.h"
@@ -175,5 +173,3 @@ public:
 	uint32_t inflateP(uint8_t ports, float pMax, Unit pUnit, uint8_t pwmValue=255);
 	void inflateP_diff(uint8_t ports, float pMax1, float pMax2, float pMax3, float pMax4, float pMax5, Unit pUnit, uint8_t pwmValue=255);
 };
-
-#endif
