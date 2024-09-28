@@ -160,7 +160,8 @@ public:
 	void pixel(uint8_t r, uint8_t g, uint8_t b);
 	void powerOFF();
 	uint32_t getStartTimeOf(Component name);
-	uint32_t getTimeOfLastStateChange(); //the last time when a valve or pump was activated or deactivated.
+	uint32_t getTimeOfLastStateChange(); //returns the last time when a valve or pump was activated or deactivated.
+	void setTimeOfLastStateChange(); //sets the time of last state change to the present time.
 
 
 	//FEEDFORWARD CONTROL: Time Dependent Methods. (Blocking)

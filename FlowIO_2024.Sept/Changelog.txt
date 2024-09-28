@@ -1,3 +1,8 @@
+2024.Sept.28
+ - Added time tracking for when the last FlowIO action took place. 
+ - This culminated in changes to the FlowIO.h, Indicators.cpp, and Driver.cpp files. There is now a private variable that stores the 
+time of last actuation / deactuation from any valve or pump. Each driver function now updates that variable to the value millis() every time that driver function is invoked. The variable is accessible through a getter. And it can also be manually set to the current time using a setter. 
+
 2022.1.24
  - The latest board update causes the existing library to not compile due to stricter 
    requirements about the return values of function. The library has been updated to 

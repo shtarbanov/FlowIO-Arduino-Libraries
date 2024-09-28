@@ -65,6 +65,9 @@
 	uint32_t FlowIO::getTimeOfLastStateChange(){
 		return _timeOfLastStateChange;
 	}
+	void FlowIO::setTimeOfLastStateChange(){
+		_timeOfLastStateChange = millis();
+	}
 	uint8_t FlowIO::readError(){
 		return _errorCode;
 	}
