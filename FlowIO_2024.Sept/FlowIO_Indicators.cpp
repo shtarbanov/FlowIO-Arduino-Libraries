@@ -32,7 +32,7 @@
 	}
 	bool FlowIO::getHardwareStateOf(uint8_t bitNumber){
 		//Parse the nth bit and return true or false
-		uint16_t one = 1; //0x0001.
+		uint16_t one = 1; //0x0001. //we use a variable "one" rather than just 1, in order to ensure it's 16bit.
     	bool returnValue = (_hardwareState>>bitNumber & one);
 		return returnValue;
 	}

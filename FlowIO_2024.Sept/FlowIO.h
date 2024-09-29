@@ -52,10 +52,10 @@ private:
 
 	//Status indicators
 	bool _powerOptimized[7]={0,0,0,0,0,0,0}; //holds 0 if a valve is not in power optmized state.
-		//Holds 1 if a valve is in an optimized power ON state. Holds 0 in if a valve is off or if it is on
-		//but not yet in an optimized power state. The values of this array are changed by the driver functions
-		//and immediately after an analogWrite() function is called on any valve.
-		//The indexing matches the hardwareState table: {p1,p2,p3,p4,p5,inlet,outlet}
+		//Holds 1 if a valve is in an optimized power ON state. Holds 0 in if a valve is OFF or if it is ON
+		//but not in an optimized power state. The values of this array are changed by the driver functions
+		//immediately after an analogWrite() function is called on any valve.
+		//The indexing matches the _hardwareState table: {p1,p2,p3,p4,p5,inlet,outlet}
 		//TODO: You can change this to a byte instead of an array and store the information in the bits.
 		//then you can simply use the set_bit() and clear_bit() function to change the desired bits only.
 	uint32_t _startTimes[9]={0,0,0,0,0,0,0,0,0}; //holds the start time for each ACTIVE valve & pump.

@@ -208,7 +208,7 @@
 		if(pUnit==PSI) return pressure_psi;
 		else if(pUnit==ATM) return pressure_atm;
 		else if(pUnit==KPA) return pressure_kpa;
-		else if(pUnit==PA) return pressure_kpa;
+		else if(pUnit==PA) return pressure_pa;
 		else if(pUnit==MBAR) return pressure_mbar;
 		else return pressure_psi;
 	}
@@ -219,3 +219,5 @@
 	void FlowIO::setPressureUnit(Unit pUnit){ //unit is an enum defined in header file.
 		_pressureUnit=pUnit;
 	}
+
+	//TODO: Implement a function getTemperature();

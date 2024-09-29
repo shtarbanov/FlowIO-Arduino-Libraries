@@ -1,7 +1,7 @@
 /*Written by Ali Shtarbanov*/
 
-//TODO: Test whether (_hardwareState & ports)==ports) indeed checks idf the hardwareState matches with the ports.
-//the way to do this test is by having inflation for 2 seconds on the same port BEFORE I run the inflateP function
+//TODO: Test whether (_hardwareState & ports)==ports) indeed checks if the hardwareState matches with the ports.
+//The way to do this test is by having inflation already running for 2 seconds on the same port BEFORE I run inflateP
 //in the main loop. Then see if I get those 2 seconds added to my total inflation time. They should be added if
 //this is working fine.
 
@@ -14,14 +14,14 @@
   /*************************************************************************************************
     Algorithm for inflateP():
     This function expects to be invoked multiple times, so it must check whether it has completed its
-    taks on a previous iteration or not, for which we rely on the the external flag inflatePcomplete.
+    tasks on a previous iteration or not, for which we rely on the the external flag inflatePcomplete.
       If the inflatePcomplete flag is true, then don't do anything and return 0.
       Else:
         - If inflation on specified 'ports' is not running yet, start inflation and return 1.
         - else, If the task is already running, check if pressure>=pmax and if not, return 1
-            otherwise stop the inflation and return the amount of time it took form when inlet was opened.
+            otherwise stop the inflation and return the amount of time it took from when inlet was opened.
 
-      NOTE: User must reset inflatePcomplete flag if the want to run this function again after it's complete.
+      NOTE: User must reset inflatePcomplete flag if they want to run this function again after it's complete.
       This applies even if they want to run this on a different port, b/c the flag is port agnostic.
 
       NOTE: Suppose I call this function after I have already been inflating the same port for 2 seconds. Then,

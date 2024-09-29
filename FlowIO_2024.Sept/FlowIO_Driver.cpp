@@ -116,7 +116,6 @@
 		//if there are any open valves that have been open for at least thresholdTime,
 		//reduce the current to the holding current, holdPWM. The second is set to 500ms
 		//by default, which would be more than enough for even very high pressures.
-		int timeNow = millis(); //TODO: Remove this by using millis() in the if block below directly.
 		for(int i=0; i<7; i++){
 			//First we check if the user wants to change the holding current at runtime or between iterations:
 			//And if some of our valves are already at an optimized power ON state, and the user changes the hold
@@ -130,7 +129,7 @@
 			}
 			//Now we just check for the case of newly opened valves that are not in the hold state yet:
 			if(_startTimes[i]>0 && _powerOptimized[i]==false){ //if a valve is open but not in an optimized state:
-				if(timeNow-_startTimes[i] > thresholdTime){
+				if(millis() -_startTimes[i] > thresholdTime){
 					if(i<5) analogWrite(_portValvePins[i], pwmHold);
 					else if(i==5) analogWrite(_inletValvePin, pwmHold);
 					else if(i==6) analogWrite(_outletValvePin, pwmHold);

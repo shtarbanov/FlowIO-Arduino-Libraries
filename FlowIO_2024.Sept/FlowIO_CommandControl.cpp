@@ -50,7 +50,6 @@
 			case '?':
 				if(ports=='?'){ //Only the command '??' requests a new pressure reading.
 					pressure = getPressure();
-					break;
 					//The ways to normally use this is to start some action, then immediately start calling
 					//'??' to get continous pressure readings as the action is undergoing.
 				}else{		 //'?#' would open port '#' and after 10ms measure the pressure on that port only.
@@ -61,13 +60,16 @@
 					setPorts(ports);
 					delay(10); //8ms is too little. 9ms is maybe Ok. 10ms is safe.
 					pressure = getPressure();
-					break;
 				}
-
+				break;
+			default:
+				// This is where you can handle what happens if "action" is invalid.
+				break;
 		}
 		//We want to get the pressure only in some states and NOT in others. And we want to return 999.9
 		//for pressure if a command like 'r' is sent. We return a valid presure only for commands
 		//that make sense to return a pressure reading.
 		//There is still a bit of an issue because no matter what, I will always get a pressure value out.
+		//If not valid commands are passed, the returned pressure will be the default value of 999.9f.
 		return pressure;
 	}
