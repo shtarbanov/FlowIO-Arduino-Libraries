@@ -9,6 +9,15 @@
 	//value of the individual bits, namely the first 5 bits. The third parameter is the PWM value if applicable.
 
 	//Implementation of the control state machine (TUTORIAL ON STATE MACHINES: https://hackingmajenkoblog.wordpress.com/2016/02/01/the-finite-state-machine/)
+	
+	//TODO: Instead of returning a magic value 999.9f, ese std::optional<float> to indicate a valid or invalid pressure reading.
+	// std::optional<float> FlowIO::command(uint8_t action, uint8_t portMask, uint8_t pwmValue){
+	//We never catch the returned value of command() in our FlowIO firmware. Thus making this change won't break 
+	//anything that is part of our FlowIO firmware or higher layers of the FlowIO stack. However, this can only be
+	//done after C++17, and currently the Arduino uses C++11. To check C++ version use: Serial.println(__cplusplus);
+	//There was a consideration whether command() should be getting new pressure for every pneumatic action, and we
+	//definitely don't want that because it would make it slow. So keep it as is, but just use an optional return.
+	//TODO: Add a command to change configuration.
 	float FlowIO::command(uint8_t action, uint8_t ports, uint8_t pwmValue){ //returns the internal pressure
 		//Here I am going to extract information from the port parameter's bits.
 		float pressure = 999.9f;

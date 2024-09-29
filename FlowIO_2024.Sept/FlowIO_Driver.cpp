@@ -2,6 +2,7 @@
 
 #include "Arduino.h"
 #include "FlowIO.h"
+//TODO: Add handling for edge cases, such as if ports=0.
 
 //DRIVER APIs: functions to control individual elements
 	//It is critical to ABSOLUTELY NEVER access a negative array element, because

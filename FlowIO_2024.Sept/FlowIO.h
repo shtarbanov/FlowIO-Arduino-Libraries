@@ -143,7 +143,7 @@ public:
 
 	//COMMAND CONTROL
 	//TODO: The command based control can only return pressure, but has no ways of
-	// returning the hardware status. May this function can simply return a pointer,
+	// returning the hardware status. Make this function return a reference.
 	//and depending on the request that pointer can point to an int, float, or null.
 	float command(uint8_t action, uint8_t ports, uint8_t pwmValue=255);
 
