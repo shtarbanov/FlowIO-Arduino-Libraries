@@ -13,50 +13,31 @@ void sensorTest(){
   showSuccess(); //3 GREEN blinks
 }
 void valveClickTest(){
-  flowio.pixel(0,0,0); //turn off the pixel.
-  delay(500);
-  flowio.openOutletValve();
-  flowio.pixel(0,0,5);
-  delay(500);
-  flowio.closeOutletValve();
-  flowio.pixel(0,0,0);
-  delay(1000);
-  flowio.setPorts(0b00000001);
-  flowio.pixel(0,0,5);
-  delay(500);
-  flowio.setPorts(0b00000000);
-  flowio.pixel(0,0,0);
-  delay(1000);
-  flowio.setPorts(0b00000010);
-  flowio.pixel(0,0,5);
-  delay(500);
-  flowio.setPorts(0b00000000);
-  flowio.pixel(0,0,0);
-  delay(1000);
-  flowio.setPorts(0b00000100);
-  flowio.pixel(0,0,5);
-  delay(500);
-  flowio.setPorts(0b00000000);
-  flowio.pixel(0,0,0);
-  delay(1000);
-  flowio.setPorts(0b00001000);
-  flowio.pixel(0,0,5);
-  delay(500);
-  flowio.setPorts(0b00000000);
-  flowio.pixel(0,0,0);
-  delay(1000);
-  flowio.setPorts(0b00010000);
-  flowio.pixel(0,0,5);
-  delay(500);
-  flowio.setPorts(0b00000000);
-  flowio.pixel(0,0,0);
-  delay(1000); 
-  flowio.openInletValve();
-  flowio.pixel(0,0,5);
-  delay(500);
-  flowio.closeInletValve();
-  flowio.pixel(0,0,0);
-  delay(1000);
+    flowio.pixel(0, 0, 0); // Turn off the pixel
+    delay(500);
+    //Outlet valve click test
+    flowio.openOutletValve();
+    flowio.pixel(0, 0, 5);
+    delay(500);
+    flowio.closeOutletValve();
+    flowio.pixel(0, 0, 0);
+    delay(1000);
+    //Ports 1 to 5 click tests
+    for (uint8_t i = 0; i < 5; i++) {
+        flowio.setPorts(1 << i); // Set port to 1, 2, 4, 8, 16
+        flowio.pixel(0, 0, 5);
+        delay(500);
+        flowio.setPorts(0b00000000);
+        flowio.pixel(0, 0, 0);
+        delay(1000);
+    }
+    //Inlet valve click test
+    flowio.openInletValve();
+    flowio.pixel(0, 0, 5);
+    delay(500);
+    flowio.closeInletValve();
+    flowio.pixel(0, 0, 0);
+    delay(1000);
 }
 void inflationPumpTest(){
   flowio.pixel(0,0,0);

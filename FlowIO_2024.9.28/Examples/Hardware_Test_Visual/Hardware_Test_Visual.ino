@@ -96,7 +96,7 @@ void loop() {
   //#############---END: Hardware Test---#################
 }
 
-/* TODO: Integrate this code into the main firmware, and there is no need to force the user to remain in testing testMode to executing all tests.
+/* TODO: Integrate this code into the main firmware, and there is no need to force the user to remain in testMode to executing all tests.
  * If I press the button, I should enter the hardware testing loop and the control loop should only cycle between the hardware testing code. Any extraneous code should
  * not be part of the infinite loop. But maybe I shouldn't do that. If I want to do a hardware test, I may just want to run a one or two tests, and not having to be
  * forced to run the entire sequence of tests.

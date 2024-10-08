@@ -17,7 +17,7 @@ long press - abort current test
 
 //#######################################
 
-#define autoofftimer 2 //minutes of inactivity until auto-power-off.
+#define AUTOOFFTIMER 2 //minutes of inactivity until auto-power-off.
 
 //#######################################
 
@@ -25,11 +25,11 @@ long press - abort current test
 #define btnPin 7
 
 FlowIO flowio;
-int mode = 0;
-int prevMode = -1; //making this different so we enter the state machine on first start.
+int test = 0;
+int prev_test = -1; //making this different so we enter the state machine on first start.
 
-bool buttonState = 0;         // current state of the button
-bool prevButtonState = 0;     // previous state of the button
+bool btnState = 0;         // current state of the button
+bool prev_btnState = 0;     // previous state of the button
 float p0 = 0;
 float pinf=0;
 float pvac=0;
@@ -47,6 +47,8 @@ void setup(){
   Serial.begin(115200);
   while(!Serial) delay(10); //"Serial" returns true whenever we press the serial monitor button.
   /*This means that we will be stuck in this infinite loop UNTIL WE OPEN THE SERIAL MONITOR!!! */
+  //TODO: See the SelfTest2024 for how to eliminate and fix this infinite loop problem.
+
   Serial.println("\n### --FlowIO Pressure Drop Test Initialized - ###");
   Serial.println("------");
   Serial.println("0. Sensor Detection test");
@@ -55,8 +57,8 @@ void setup(){
 }
 
 void loop() {
-  if(mode != prevMode){ //Only execute this code if the mode has changed.
-    switch(mode){
+  if(test != prev_test){ //Only execute this code if the test has changed.
+    switch(test){
       case 0:
         flowio.blueLED(1);
         sensorTest();
@@ -68,7 +70,7 @@ void loop() {
         manualLeakTest();
         break;
     }
-    prevMode = mode;
+    prev_test = test;
   }
   //NOTE: If I enter a character into serial monitor and press enter, this will result in two bytes! The first 
   //byte will be the character entered, and the second will be LineFeed (Decimal 10). If I just click the send
@@ -76,26 +78,25 @@ void loop() {
   while(Serial.available() > 0) {
     // read the incoming byte:
     char incomingByte = Serial.read();
-    if(incomingByte-'0' >= 0 && incomingByte-'0'<= 1){ //if it is an allowed mode
-      mode = incomingByte-'0'; //subtract ascii 0 to get the number the user wants to execute.
-      Serial.println(mode);
+    if(incomingByte-'0' >= 0 && incomingByte-'0'<= 1){ //if it is allowed test number
+      test = incomingByte-'0'; //subtract ascii 0 to get the number the user wants to execute.
+      Serial.println(test);
       Serial.print("Starting test #");
       Serial.println(incomingByte - '0');
-      if(prevMode == mode) prevMode = 99; //this allows us to repeat the test by typing the same test tumber.
+      if(prev_test == test) prev_test = 99; //this allows us to repeat the test by typing the same test tumber.
     }
   } 
   //################---Button Control---##########################
-  buttonState = digitalRead(btnPin);
-  if(buttonState != prevButtonState){ //if buttonstate has changed.
-    if(buttonState == LOW)  //and if it is now pressed.
-      mode += 1;
-      if(mode>1) mode=0;
+  btnState = digitalRead(btnPin);
+  if(btnState != prev_btnState){ //if btnState has changed.
+    if(btnState == LOW)  //and if it is now pressed.
+      test += 1;
+      if(test>1) test=0;
       delay(50); //debounce
   }
-  prevButtonState = buttonState; 
+  prev_btnState = btnState; 
   //################---Button Control End---##########################
-  autoPowerOff(autoofftimer); //Even though we are calling this function every iteration, internally
-  //it executes once every 5 seconds to check if it's time to power off the device.
+  autoPowerOff(AUTOOFFTIMER); //Although it's called every iteration, internally it runs once every 5 seconds.
 }
 
 //############################--Function Definitions--##################################
@@ -147,8 +148,8 @@ void manualLeakTest(){
       }
     }
     //via Button:
-    buttonState = digitalRead(btnPin);
-    if(buttonState == LOW){ //if buttonstate has changed AND is now pressed.
+    btnState = digitalRead(btnPin);
+    if(btnState == LOW){ //if buttonstate has changed AND is now pressed.
       Serial.println("Aborting");
       testDuration = 0; //this will break out of the test
     }
