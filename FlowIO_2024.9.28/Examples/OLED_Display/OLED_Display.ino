@@ -3,13 +3,37 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+// #include <Fonts/FreeSerif9pt7b.h> //full list of fonts: 
 
-#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+/*
+https://randomnerdtutorials.com/guide-for-oled-display-with-arduino/
+
+//This font is very wide
+FreeMono9pt7b.h
+FreeMonoBold9pt7b.h		
+FreeMonoOblique9pt7b.h
+FreeMonoBoldOblique9pt7b.h
+
+//This font is compact
+FreeSans9pt7b.h
+FreeSansBold9pt7b.h
+FreeSansOblique9pt7b.h
+FreeSansBoldOblique9pt7b.h
+
+//This font has serifs
+FreeSerif9pt7b.h
+FreeSerifBold9pt7b.h
+FreeSerifBoldItalic9pt7b.h
+FreeSerifItalic9pt7b.h
+
+Fonts come in 9, 12, 28, 24pt versions.
+*/
+
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
-
 #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
-#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+#define I2C_ADDRESS 0x3C
+
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 int x=0, y=0;
@@ -40,10 +64,11 @@ void setup() {
   Serial.begin(115200);
 
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+  if(!display.begin(SSD1306_SWITCHCAPVCC, I2C_ADDRESS)) {
     Serial.println(F("SSD1306 allocation failed"));
     for(;;); // Don't proceed, loop forever
   }
+
 
   // display.display(); //Shows default display buffer (library sets this to the Adafruit logo)
   // delay(2000);

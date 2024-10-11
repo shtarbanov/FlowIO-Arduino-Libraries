@@ -1,23 +1,24 @@
 void initHardwareTest(){
-  Serial.println("\n### --FlowIO Self Test Initialized - ###");
-  Serial.println("------------------------------");
-  Serial.println("---> Input commands: <---");
-  Serial.println("0 - Pressure Sense test\t ---> Detect sensor and measure the ambient pressure.");
-  Serial.println("1 - Valve Click test\t ---> Each valve will turn on / off sequentially. Listen for 14 clicks.");
-  Serial.println("2 - Battery test\t ---> Detect if battery is present");
-  Serial.println("3 - Inflation pump test\t ---> Run pump1 for 100ms to increase internal pressure, then release.");
-  Serial.println("4 - Vacuum pump test\t ---> Run pum2 for 100ms to decrease internal pressure, then release.");
-  Serial.println("5 - Variable Inf test\t ---> Inflate with dropping PWM. Listen for decreasing sound");
-  Serial.println("6 - Variable Vac test\t ---> Vacuum with dropping PWM. Listen for decreasing sound");  
-  Serial.println("7 - Manual Leak test\t ---> Manually check for leask with a syringe connected to the inlet.");
-  Serial.println("8 - Power OFF test\t ---> Shut down the device\n");
-  Serial.println("n - next test.");
-  Serial.println("r - repeat last test.");
-  Serial.println("btn - next test (press the hidden button to run). \n------------------------------");
-  Serial.println("---> Physical Indicators: <---");
-  Serial.println("BLUE Pulsing\t- test running");
-  Serial.println("GREEN Blinking\t- test succeeded");
-  Serial.println("RED Blinking\t- test failed \n------------------------------------");
+  Serial.println(F("\n### --FlowIO Self Test Initialized - ###"));
+  Serial.println(F("------------------------------"));
+  Serial.println(F("---> Input commands: <---"));
+  Serial.println(F("0 - Pressure Sense test\t ---> Detect sensor and measure the ambient pressure."));
+  Serial.println(F("1 - Valve Click test\t ---> Each valve will turn on / off sequentially. Listen for 14 clicks."));
+  Serial.println(F("2 - Battery test\t ---> Detect if battery is present"));
+  Serial.println(F("3 - Inflation pump test\t ---> Run pump1 for 100ms to increase internal pressure, then release."));
+  Serial.println(F("4 - Vacuum pump test\t ---> Run pum2 for 100ms to decrease internal pressure, then release."));
+  Serial.println(F("5 - Variable Inf test\t ---> Inflate with dropping PWM. Listen for decreasing sound"));
+  Serial.println(F("6 - Variable Vac test\t ---> Vacuum with dropping PWM. Listen for decreasing sound"));  
+  Serial.println(F("7 - Manual Leak test\t ---> Manually check for leask with a syringe connected to the inlet."));
+  Serial.println(F("8 - Power OFF test\t ---> Shut down the device\n"));
+  Serial.println(F("n - next test."));
+  Serial.println(F("r - repeat last test."));
+  Serial.println(F("i - Device information"));
+  Serial.println(F("btn - next test (press the hidden button to run). \n------------------------------"));
+  Serial.println(F("---> Physical Indicators: <---"));
+  Serial.println(F("BLUE Pulsing\t- test running"));
+  Serial.println(F("GREEN Blinking\t- test succeeded"));
+  Serial.println(F("RED Blinking\t- test failed \n------------------------------------"));
 }
 //############################--Test Functions--##################################
 void valveDetectionTest(){ //This test must be done with the USB cable disconnected, because no battery voltage drop would happen otherwise.
@@ -288,4 +289,15 @@ void printTestResult(){
     Serial.print(testResults[i]);
     (i+1)==sizeof(testResults) ? Serial.print("]") : Serial.print(", ");
   }
+}
+
+//#####################################################################################
+void printDeviceInfo(){
+  Serial.print("\n-----------INFO---------------\nMinutes till power off: ");
+  Serial.println(autoPowerOff(AUTOOFFTIMER));
+  Serial.print("FlowIO System ID: ");
+  Serial.println(getMcuUniqueID());
+  Serial.print("Hardware state: ");
+  Serial.println(flowio.getHardwareState(),BIN);
+  Serial.print("------------------------------\n");
 }

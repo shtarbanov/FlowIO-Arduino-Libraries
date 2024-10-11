@@ -74,7 +74,7 @@ TODO: Add a configuration detection test. This can even be done in the FlowIO li
 //#######################################
 
 FlowIO flowio;
-int testMode = -1; //this will be set to 0 during initHardwareTest
+int testMode = -1; //this will be set to 0
 int prevTestMode = -1; //making this different so we enter the state machine on first start.
 bool repeatTest = false;
 
@@ -86,8 +86,8 @@ bool repeatTest = false;
 int testData[8] = {0}; //this stores values such as pressures or voltages
 bool testResults[8] = {0}; //this stores success or failure results
 
-bool buttonState = 0;         // current state of the button
-bool prevButtonState = 0;     // previous state of the button
+bool btnState = 0;         // current state of the button
+bool prevbtnState = 0;     // previous state of the button
 float p0 = 0;
 float pinf=0;
 float pvac=0;
@@ -190,14 +190,14 @@ void loop() {
     if(repeatTest) repeatTest=false;
     prevTestMode = testMode;
   }
-  buttonState = digitalRead(btnPin);
-  if(buttonState != prevButtonState){ //if buttonstate has changed.
-    if(buttonState == LOW)  //and if it is now pressed.
+  btnState = digitalRead(btnPin);
+  if(btnState != prevbtnState){ //if btnState has changed.
+    if(btnState == LOW)  //and if it is now pressed.
       testMode += 1;
       if(testMode>7) testMode=0;
       delay(50); //debounce
   }
-  prevButtonState = buttonState; 
+  prevbtnState = btnState; 
   //NOTE: If I enter a character into serial monitor and press enter, this will result in two bytes! The first 
   //byte will be the character entered, and the second will be LineFeed (Decimal 10). If I just click the send
   //button without entereing anything, the LineFeed will be received!
@@ -210,6 +210,9 @@ void loop() {
     else if(incomingByte-'0' >= 0 && incomingByte-'0'<= 8){ //if it is an allowed mode
       testMode = incomingByte-'0'; //subtract ascii 0 to get the number the user wants to execute.
       prevTestMode=-1; //reset the prevMode variable to assume that the mode has changed even if it's the same as the previous.
+    }
+    else if(incomingByte=='i'){ //show information
+      printDeviceInfo();
     }
   } 
   autoPowerOff(AUTOOFFTIMER); //Although it's called every iteration, internally it runs once every 5 seconds.
