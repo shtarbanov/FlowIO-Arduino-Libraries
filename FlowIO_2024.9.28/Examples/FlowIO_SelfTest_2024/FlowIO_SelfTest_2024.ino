@@ -86,8 +86,6 @@ bool repeatTest = false;
 int testData[8] = {0}; //this stores values such as pressures or voltages
 bool testResults[8] = {0}; //this stores success or failure results
 
-bool btnState = 0;         // current state of the button
-bool prevbtnState = 0;     // previous state of the button
 float p0 = 0;
 float pinf=0;
 float pvac=0;
@@ -129,7 +127,7 @@ void loop() {
   if(testMode != prevTestMode){ //Only execute this code if the mode has changed.
     switch(testMode){
       //0. Sensor test
-      case 0: //we come here when we first start the system
+      case 0:
         flowio.blueLED(1);
         sensorTest();
         break;
@@ -190,6 +188,8 @@ void loop() {
     if(repeatTest) repeatTest=false;
     prevTestMode = testMode;
   }
+  static bool btnState = 0;         // current state of the button
+  static bool prevbtnState = 0;     // previous state of the button
   btnState = digitalRead(btnPin);
   if(btnState != prevbtnState){ //if btnState has changed.
     if(btnState == LOW)  //and if it is now pressed.
@@ -202,7 +202,7 @@ void loop() {
   //byte will be the character entered, and the second will be LineFeed (Decimal 10). If I just click the send
   //button without entereing anything, the LineFeed will be received!
   while(Serial.available() > 0) {
-    // read the incoming byte:
+    // read the incoming byte and set the test mode accordingly:
     char incomingByte = Serial.read();
     if(incomingByte=='r') repeatTest=true;
     else if(incomingByte=='n') testMode++;
