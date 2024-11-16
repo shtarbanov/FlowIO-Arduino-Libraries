@@ -191,8 +191,8 @@ void loop() {
   static bool btnState = 0;         // current state of the button
   static bool prevbtnState = 0;     // previous state of the button
   btnState = digitalRead(btnPin);
-  if(btnState != prevbtnState){ //if btnState has changed.
-    if(btnState == LOW)  //and if it is now pressed.
+  if(btnState == 0)  //and if it is now pressed.
+    if(btnState != prevbtnState){ //if btnState has changed.
       testMode += 1;
       if(testMode>7) testMode=0;
       delay(50); //debounce

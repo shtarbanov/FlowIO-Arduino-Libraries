@@ -236,7 +236,7 @@ void manualLeakTest(){
   flowio.openInletValve();
   flowio.setPorts(0b00000000);
   Serial.println("You have 20 seconds to check for leaks via the inlet valve.");
-  for(int i=20; i>=0; i--){   
+  for(int i=60; i>=0; i--){   
     //Output i & pressure every second
     Serial.print(i);
     Serial.print(": P = ");
