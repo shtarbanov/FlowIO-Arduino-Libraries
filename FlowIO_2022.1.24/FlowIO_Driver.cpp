@@ -130,3 +130,10 @@
 		_pwmHoldPrev = pwmHold;
 		//NOTE: _powerOptimized[] get reset to 0 by the driver action functions.
 	}
+
+void FlowIO::setRegulator(uint8_t pwm) {
+    if (_config != REGULATED_PRESSURE) return;
+    for (int i = 0; i < 4; i++) {
+        digitalWrite(_regulatorPins[i], _BV(i) & pwm ? HIGH : LOW);
+    }
+}

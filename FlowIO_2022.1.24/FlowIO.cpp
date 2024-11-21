@@ -35,6 +35,10 @@
 		}
 		pinMode(blueLEDpin,OUTPUT);
 		// pinMode(redLEDpin,OUTPUT);
+        for (uint8_t& pin : _regulatorPins) {
+            pinMode(pin, OUTPUT);
+            digitalWrite(pin, LOW);
+        }
 	}
 	void FlowIO::setConfig(Configuration config){ //Notice that this is different from "_setConfig"
 		_config = config;
