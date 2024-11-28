@@ -1,6 +1,6 @@
 #include <Adafruit_TinyUSB.h> // for Serial
 /* 
-
+BUG: Raising an error code other than 0 causes next pressure reading to be -1.
 TODO: Add a small i2C OLED display module to show the results on the displa module directly. The display module can be connected to the expansion port, or I can create a simple 4-header cable that I solder 
   to the microcontroller pins on top and just have it be dangling of to the side. The latter won't require any new PCBs to be designed or modifications of the existing pcb, because the soldering will
   be to the top of the MCU board, not the driver board. Then I can use the OLED I already have from the current ranger to do the testing. 
@@ -13,7 +13,7 @@ TODO: I can write code to check if a USB power cable is connected by monitoring 
   The code I used for this test is:
   if(!serialPortOpened && Serial){
     serialPortOpened=true;
-    if(!initHwTestDone) {initHwTestDone=true; initHardwareTest();}
+    if(!initHwTestDone) {initHwTestDone=true; hardwareTestInfo();}
     Serial.print("Next test: #");
     Serial.println(testMode+1);
     flowio.openInletValve();
@@ -78,14 +78,6 @@ int testMode = -1; //this will be set to 0
 int prevTestMode = -1; //making this different so we enter the state machine on first start.
 bool repeatTest = false;
 
-
-
-//The following variables are just for the printTestResult() function. They don't have real importance.
-//Saving the results is useful in the case of the valve detection function where we have to disconnect the USB cable during the test
-//but we may wish to view the test result after reconnecting the cable.
-int testData[8] = {0}; //this stores values such as pressures or voltages
-bool testResults[8] = {0}; //this stores success or failure results
-
 float p0 = 0;
 float pinf=0;
 float pvac=0;
@@ -109,102 +101,72 @@ void loop() {
   //This only works though if Arduino is open and configured to look for Serial connections from the FlowIO board, not otherwise. Nevertheless, this now serves as a whole new input method for 
   //controlling FlowIO. NOTE: Even though I can execute code on both connect and disconnect, the serial monitor can only display the things executed on connect but not on disconnect.
   static bool serialPortOpened=false;
-  static bool initHwTestDone = false;  
   if(!serialPortOpened && Serial){ //If the serial port becomes active at any point after being inactive, reset the test and run init function.
     serialPortOpened=true;
-    if(!initHwTestDone) {initHwTestDone=true; initHardwareTest();}
-    Serial.print("Next test: #");
+    hardwareTestInfo();
     Serial.println(testMode+1);
   }else if(serialPortOpened && !Serial){ //if the Serial port was active and then the cable got unplugged:
     serialPortOpened=false; //no longer open
   }
   //#############################################################
 
-  if(repeatTest==true){
+  if(repeatTest){
     prevTestMode=-1; //reset the prevMode variable to assume that the mode has changed
     repeatTest = false;
   }
   if(testMode != prevTestMode){ //Only execute this code if the mode has changed.
     switch(testMode){
-      //0. Sensor test
-      case 0:
-        flowio.blueLED(1);
-        sensorTest();
-        break;
-      //1. Valve Click Test
-      case 1:
-        flowio.blueLED(1);
-        delay(500); //delay to allow enough time to release button
-        valveClickTest();
-        break;
-      //2. Battery test
-      case 2:
-        flowio.blueLED(1);
-        delay(500);
-        batteryConnectionTest();
-        break;
-      //3. Inflation Pump test
-      case 3:
-        flowio.blueLED(1);
-        delay(500); //delay to allow enough time to release button
-        inflationPumpTest();
-        break;
-      //4. Vacuum pump test
-      case 4:
-        flowio.blueLED(1);
-        delay(500); //delay to allow enough time to release button
-        vacuumPumpTest();
-        break;
-
-      //5. PWM Inflation test
-      case 5:
-        flowio.blueLED(1);
-        delay(500); //delay to allow enough time to release button
-        pwmInflationTest();
-        break;
-      //6. PWM Vacuum test
-      case 6:
-        flowio.blueLED(1);
-        delay(500); //delay to allow enough time to release button
+      case 0: //0. Sensor test
+        sensorTest();             break;
+      case 1: //1. Valve Click Test
+        valveClickTest();         break;
+      case 2:  //2. Battery test
+        batteryConnectionTest();  break;
+      case 3:  //3. Inflation Pump test
+        inflationPumpTest();      break;
+      case 4:  //4. Vacuum pump test
+        vacuumPumpTest();         break;
+      case 5:  //5. PWM Inflation test
+        pwmInflationTest();       break;
+      case 6:  //6. PWM Vacuum test
         pwmVacuumTest();
-        Serial.println("------\nNext Test: 'Manually Check for sensor leaks'");
-        Serial.println("Before running this test, disconnect the pump module and connect a syringe to the");
-        Serial.println("inelt valve (rightmost). When the test starts, the inlet valve will open and stay");
-        Serial.println("open for 20 seconds. During that time, try pushing air with the syringe into the");
-        Serial.println("inlet valve to check if there are any leaks. Type 5 to begin this test."); 
+        Serial.println("\tNext Test: 'Manually Check for sensor leaks'");
+        Serial.println("\tPreparation: Remove pump module and connect a syringe to the inlet (rightmost) valve.");
+        Serial.println("\tWhen the test starts, push air with the syringe to check if there are any leaks."); 
         break;
-      //7. Leak test
-      case 7:
-        flowio.blueLED(1);
-        delay(500);
-        manualLeakTest();
-        break;
-      //8. Power off test
-      case 8:
+      case 7:  //7. Leak test
+        manualLeakTest();         break;
+      case 8:  //8. Power off test
         Serial.println("8. Powering OFF......\t\t\tdone\n\n");
-        flowio.powerOFF();
-        break;
+        flowio.powerOFF();        break;
     }
-    if(repeatTest) repeatTest=false;
     prevTestMode = testMode;
   }
+
+  //############--Button Control--#########################
   static bool btnState = 0;         // current state of the button
   static bool prevbtnState = 0;     // previous state of the button
   btnState = digitalRead(btnPin);
-  if(btnState == 0)  //and if it is now pressed.
+  if(btnState == 0)  //if btn is now pressed.
     if(btnState != prevbtnState){ //if btnState has changed.
       testMode += 1;
-      if(testMode>7) testMode=0;
+      if(testMode>8) testMode=0;
       delay(50); //debounce
   }
   prevbtnState = btnState; 
-  //NOTE: If I enter a character into serial monitor and press enter, this will result in two bytes! The first 
-  //byte will be the character entered, and the second will be LineFeed (Decimal 10). If I just click the send
-  //button without entereing anything, the LineFeed will be received!
+
+  //#################--Serial Control--######################
+  //NOTE: If I enter a character into serial monitor and press enter, this will result in 3 bytes! The first 
+  //byte will be the character entered, and the second will be LineFeed (Decimal 10), third CR. 
+  //If I just click the send button without entereing anything, the LineFeed will be received!
   while(Serial.available() > 0) {
     // read the incoming byte and set the test mode accordingly:
     char incomingByte = Serial.read();
-    if(incomingByte=='r') repeatTest=true;
+    if(incomingByte=='h') {
+      hardwareTestInfo();
+      Serial.println(testMode+1);
+    }
+    else if(incomingByte=='r') repeatTest=true;
     else if(incomingByte=='n') testMode++;
     else if(incomingByte=='p') printTestResult();
     else if(incomingByte-'0' >= 0 && incomingByte-'0'<= 8){ //if it is an allowed mode
@@ -215,5 +177,10 @@ void loop() {
       printDeviceInfo();
     }
   } 
-  autoPowerOff(AUTOOFFTIMER); //Although it's called every iteration, internally it runs once every 5 seconds.
+  //#########################################################
+
+  //###############################################
+  static uint8_t _holdPWM=150; //valve holding voltage.
+  flowio.optimizePower(_holdPWM,200);
+  autoPowerOff(AUTOOFFTIMER); //Although it's called every iteration, internally it runs once every 5 seconds.  
 }

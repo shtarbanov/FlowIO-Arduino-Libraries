@@ -1,6 +1,9 @@
-void initHardwareTest(){
-  Serial.println(F("\n### --FlowIO Self Test Initialized - ###"));
-  Serial.println(F("------------------------------"));
+//The following variables are just for the printTestResult() function. They don't have real importance.
+//Saving the results is useful in the case of the valve detection function where we have to disconnect the USB cable during the test
+//but we may wish to view the test result after reconnecting the cable.
+float testResults[8][10] = {0};
+
+void hardwareTestInfo(){
   Serial.println(F("---> Input commands: <---"));
   Serial.println(F("0 - Pressure Sense test\t ---> Detect sensor and measure the ambient pressure."));
   Serial.println(F("1 - Valve Click test\t ---> Each valve will turn on / off sequentially. Listen for 14 clicks."));
@@ -11,14 +14,18 @@ void initHardwareTest(){
   Serial.println(F("6 - Variable Vac test\t ---> Vacuum with dropping PWM. Listen for decreasing sound"));  
   Serial.println(F("7 - Manual Leak test\t ---> Manually check for leask with a syringe connected to the inlet."));
   Serial.println(F("8 - Power OFF test\t ---> Shut down the device\n"));
-  Serial.println(F("n - next test."));
+  Serial.println(F("n - run next test."));
+  Serial.println(F("a - abort current test."));
   Serial.println(F("r - repeat last test."));
+  Serial.println(F("p - print results of last test."));
   Serial.println(F("i - Device information"));
-  Serial.println(F("btn - next test (press the hidden button to run). \n------------------------------"));
+  Serial.println(F("h - Help information"));
+  Serial.println(F("\n[btn] - run next test. \n------------------------------"));
   Serial.println(F("---> Physical Indicators: <---"));
   Serial.println(F("BLUE Pulsing\t- test running"));
   Serial.println(F("GREEN Blinking\t- test succeeded"));
   Serial.println(F("RED Blinking\t- test failed \n------------------------------------"));
+  Serial.print(F("Enter 'n' or press [btn] to run next test: #"));
 }
 //############################--Test Functions--##################################
 void valveDetectionTest(){ //This test must be done with the USB cable disconnected, because no battery voltage drop would happen otherwise.
@@ -88,7 +95,7 @@ void sensorTest(){
   flowio.openPorts(0b00000011);
   delay(100);
   flowio.stopAction(0xFF);
-  Serial.print("0. Sensor Test in Progress............");
+  Serial.print(F("0. Sensor Test in Progress............"));
   while(flowio.activateSensor()==false){
     showFailure();
     Serial.println(flowio.readError());
@@ -100,14 +107,15 @@ void sensorTest(){
   p0=flowio.getPressure(PSI);
   Serial.print(p0);
   showSuccess();
-  flowio.pixel(0,1,0);
   Serial.println("\tdone");
+
+  // testResults 
 }
 
 //TEST 1
-void valveClickTest(){
+void valveClickTest(){ //TODO: if the USB cable is disconnected, then run the valveDetectionTest() instead (defined above)
     flowio.pixel(0, 0, 0); // Turn off the pixel
-    Serial.print("1. Valve Click Test in Progress....");
+    Serial.print(F("1. Valve Click Test in Progress...."));
     delay(500);
     //Outlet valve click test
     Serial.print("out..");
@@ -136,7 +144,7 @@ void valveClickTest(){
     delay(500);
     flowio.closeInletValve();
     flowio.pixel(0, 0, 0);
-    delay(1000);
+    delay(100);
     Serial.println("\tdone");
     flowio.pixel(1,1,1);
 }
@@ -144,7 +152,7 @@ void valveClickTest(){
 //TEST 2
 void batteryConnectionTest(){
   flowio.pixel(0,0,0);
-  Serial.print("2. Battery Connection Test in Progress...");
+  Serial.print(F("2. Battery Connection Test in Progress..."));
   pinMode(batteryPin,INPUT);
   int vbat0 = analogRead(batteryPin);
   flowio.openInletValve();
@@ -162,7 +170,7 @@ void batteryConnectionTest(){
 //TEST 3
 void inflationPumpTest(){
   flowio.pixel(0,0,0);
-  Serial.print("3. Inflation Pump Test in Progress....");
+  Serial.print(F("3. Inflation Pump Test in Progress...."));
   flowio.openInletValve();
   flowio.startPump(1);
   delay(100);
@@ -185,7 +193,7 @@ void inflationPumpTest(){
 //TEST 4
 void vacuumPumpTest(){
   flowio.pixel(0,0,0);
-  Serial.print("4. Vacuum Pump Test in Progress.......");
+  Serial.print(F("4. Vacuum Pump Test in Progress......."));
   flowio.openOutletValve();
   flowio.startPump(2);
   delay(100);
@@ -206,7 +214,7 @@ void vacuumPumpTest(){
 //TEST 5
 void pwmInflationTest(){
   flowio.pixel(0,0,5);
-  Serial.print("5. Variable Inflation Test in progress.........");
+  Serial.print(F("5. Variable Inflation Test in progress........."));
   for(int i=255; i>45; i--){
     flowio.startInflation(0b00000001,i);
     delay(20);
@@ -219,7 +227,7 @@ void pwmInflationTest(){
 //TEST 6
 void pwmVacuumTest(){
   flowio.pixel(0,0,5);
-  Serial.print("6. Variable Vacuum Test in progress............");
+  Serial.print(F("6. Variable Vacuum Test in progress............"));
   for(int i=255; i>45; i--){
     flowio.startVacuum(0b00000001,i);
     delay(20);
@@ -232,22 +240,36 @@ void pwmVacuumTest(){
 //TEST 7
 void manualLeakTest(){
   flowio.pixel(0,0,0);
-  Serial.println("7. Manual Leak Test in Progress...");
+  Serial.println(F("7. Manual Leak Test in Progress..."));
   flowio.openInletValve();
   flowio.setPorts(0b00000000);
-  Serial.println("You have 20 seconds to check for leaks via the inlet valve.");
+  Serial.println(F("\tYou have 60 seconds to check for leaks via the inlet valve."));
   for(int i=60; i>=0; i--){   
     //Output i & pressure every second
+    Serial.print("\t");
     Serial.print(i);
-    Serial.print(": P = ");
     pinf=flowio.getPressure(PSI);
+    if(pinf==-1) break;//sensor not initialized; exit the for loop.
+    Serial.print(": P = ");
     Serial.println(pinf);
     delay(1000);
     flowio.pixel(0,0,1);
-    (i%2==0) ? flowio.pixel(0,0,1) : flowio.pixel(0,0,0);;
+    (i%2==0) ? flowio.pixel(0,0,1) : flowio.pixel(0,0,0);
+    
+    //If 'a' is entered during the test, abort it.
+    while(Serial.available() > 0) {
+      char incomingByte = Serial.read();
+      if(incomingByte=='a'){
+        Serial.println(F("\t\t\t\t\t\t\tABORTING"));
+        flowio.closeInletValve();
+        flowio.pixel(1,1,1);
+        return;
+      }
+    } 
+
   }
+  (pinf==-1) ? Serial.println("\tABORT: Sensor not initialized") : Serial.println("\tdone");
   flowio.closeInletValve();
-  Serial.println("\tdone");
   flowio.pixel(1,1,1);
 }
 
@@ -262,8 +284,7 @@ void showSuccess(){
     flowio.pixel(0,5,0);
     delay(75);
   }
-  flowio.pixel(0,1,0);
-  delay(100); 
+  flowio.pixel(1,1,1);
 }
 void showFailure(){
   Serial.print("\tError = ");
@@ -281,13 +302,13 @@ void showFailure(){
 }
 
 void printTestResult(){
-  //prints the result from the last test
-  Serial.print("Test: ");
-  Serial.print(testMode);
-  Serial.print(", Results: [");
-  for(int i=0; i<sizeof(testResults); i++){
-    Serial.print(testResults[i]);
-    (i+1)==sizeof(testResults) ? Serial.print("]") : Serial.print(", ");
+  Serial.print("-----------\nTest Results: \n");
+  for(int i=0; i<8; i++){ //float testResults[8][10] = {0};
+    for(int j=0; j<10; j++){
+      Serial.print(testResults[i][j]);
+      j==0 ? Serial.print (" : ") : j=j;
+      j==9 ? Serial.print("\n") : Serial.print("\t");
+    }
   }
 }
 
@@ -300,4 +321,6 @@ void printDeviceInfo(){
   Serial.print("Hardware state: ");
   Serial.println(flowio.getHardwareState(),BIN);
   Serial.print("------------------------------\n");
+  flowio.blueLED(HIGH);
+  // Serial.print("Sensor Present: ");
 }

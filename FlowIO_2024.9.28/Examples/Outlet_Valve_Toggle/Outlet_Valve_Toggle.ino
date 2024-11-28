@@ -1,11 +1,11 @@
-/* Toggle the Inlet valve (with power saving) either 
+/* Toggle the Outlet valve (with power saving) either 
   - by pressing the button
   - or by entering 0 or 1 in the serial monitor
 On startup, the program starts in Mode 0 and activates the pressure sensor
 The LED changes color to indicate the mode.
 The pressure is reporter once every second when in mode 1.
 If mode 1 has been active for 1 minute, it automatically switches to mode 0.
-The device turns off after 4 minutes of inactivity
+The device turns off after 4 minutes of inactivity.
  */
 
 #include <FlowIO.h>
@@ -35,7 +35,7 @@ void loop() {
       delay(10);
     }
     if(serialPortOpened) Serial.println(F("Sensor detection...SUCCESS"));
-    Serial.println(F("Type 1 to openInletValve(), 0 to closeInletValve()"));
+    Serial.println(F("Type 1 to openOutletValve(), 0 to closeOutletValve()"));
     Serial.println("------");
   }else if(serialPortOpened && !Serial){ //if the Serial port was active and then the cable got unplugged:
     serialPortOpened=false; //no longer open
@@ -50,12 +50,12 @@ void loop() {
   if(mode != prevMode){ //Only execute this code if the mode has changed.
     switch(mode){
       case 0: //we come here when we first start the system
-        flowio.closeInletValve();
+        flowio.closeOutletValve();
         if(serialPortOpened) Serial.println(F("\nSet to Mode 0")); //this will not print at startup, because it takes time for port to open
         flowio.pixel(1,1,1);
         break;
       case 1:
-        flowio.openInletValve();
+        flowio.openOutletValve();
         if(serialPortOpened) Serial.println(F("Set to Mode 1"));
         countDisplayP = 0; //reset the pressure display counter
         flowio.pixel(1,0,0); //
@@ -65,8 +65,8 @@ void loop() {
   }
   else if (mode == 1){ //show the pressure every second
     showPressureEvery(1);
-    if(flowio.getHardwareStateOf(INLET)){
-      if(millis()-flowio.getStartTimeOf(INLET) > 60*1000) mode=0;
+    if(flowio.getHardwareStateOf(OUTLET)){
+      if(millis()-flowio.getStartTimeOf(OUTLET) > 60*1000) mode=0;
     }
   }
 
@@ -113,5 +113,5 @@ void showPressureEvery(uint8_t T){
   }
   countDisplayP++;
   Serial.print(flowio.getPressure(PSI));
-  // Serial.println(flowio.getStartTimeOf(INLET));
+  // Serial.println(flowio.getStartTimeOf(OUTLET));
 }

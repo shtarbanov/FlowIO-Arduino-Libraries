@@ -1,5 +1,5 @@
 float autoPowerOff(uint8_t T) {  //the argument is in units of minutes
-  static float remainingTime = T;
+  static float remainingTime = 0;
   //The following static variable initilizations will execute only firs first time this function is invoked, and will be ignored afterwareds.
   static uint32_t timelastchecked=millis();
   static uint8_t alertMinutes = T; //this will decrease by 1 whenever remainingTime goes down by a full minute.
@@ -19,6 +19,7 @@ float autoPowerOff(uint8_t T) {  //the argument is in units of minutes
   }
   //alertMinutes starts at T and decreases by 1 every minute; this condition is true only once-per-minute.
   else if(remainingTime <= alertMinutes){
+    Serial.print("\t");
     Serial.print(alertMinutes);
     Serial.println(F(" min till Off."));
     alertMinutes--;
