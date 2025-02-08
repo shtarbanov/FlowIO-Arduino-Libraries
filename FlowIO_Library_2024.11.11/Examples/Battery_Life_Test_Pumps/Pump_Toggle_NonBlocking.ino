@@ -6,8 +6,8 @@ void pumpToggle(uint16_t T) {  //the argument is in milliseconds
     Serial.print("\nToggle ");
     timelastchecked = millis(); //update the variable so we know how much time has passed between now and the next invocation.
     //toggle pumps
-    flowio.getHardwareStateOf(PUMP1) ? flowio.stopPump(1) : flowio.startPump(1,255);
-    // flowio.getHardwareStateOf(PUMP2) ? flowio.stopPump(2) : flowio.startPump(2,255);
+    // flowio.getHardwareStateOf(PUMP1) ? flowio.stopPump(1) : flowio.startPump(1,255);
+    flowio.getHardwareStateOf(PUMP2) ? flowio.stopPump(2) : flowio.startPump(2,255);
     flowio.getHardwareStateOf(LEDBLUE) ? flowio.blueLED(LOW) : flowio.blueLED(HIGH);
     Serial.println(flowio.getHardwareState(),BIN);
     //I want to have one pump on while the other is off, and vice versa. For this to happen,
