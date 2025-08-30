@@ -1,8 +1,16 @@
 #include <Adafruit_TinyUSB.h> // for Serial
 
 /*This is testing how the internal pressure of the device drops due to leaks from the port valves. 
-This test is based on the Leak Test, and it outputs "Time" & "Pressure" every second for 3 minutes.
+This test is based on the Leak Test, and it outputs "Time" & "Pressure" every second for 2 minutes.
 To run the test, connect a syringe on the Inlet port and start the test to open the inlet valve only.
+
+Hardware Setup: You need the Inlet Valve, Port5 Valve, and EndBlocker present. However, the Port5 valve does not need 
+to be connected electrically anywhere, because you're only energizing the Inlet valve during the test. The Port5 valve
+is the one from which the air will be coming out of once the pressure exceeds the maximum the valve can support.
+You also need the syringe with short tube to be permanently connected to the Inlet valve. 
+Then you simply swap the Port5 valve with another one to test many valves using this same setup. 
+If you have a vise, you don't need to put in the metal brackets during the test.
+You also don't need to have plugs inserted in the valves
 
 Commands available:
 0 - pressure sensor test
@@ -35,6 +43,8 @@ float pinf=0;
 float pvac=0;
 uint32_t t0;
 uint32_t t;
+
+uint8_t _holdPWM=150; //valve holding voltage.
 
 void setup(){
   flowio = FlowIO(GENERAL); //This must be done the very first item to minimize the click on startup (Bug #44 on Github)  
@@ -96,7 +106,9 @@ void loop() {
   }
   prev_btnState = btnState; 
   //################---Button Control End---##########################
-  autoPowerOff(AUTOOFFTIMER); //Although it's called every iteration, internally it runs once every 5 seconds.
+  //autoPowerOff(AUTOOFFTIMER); //Although it's called every iteration, internally it runs once every 5 seconds.
+
+  flowio.optimizePower(_holdPWM,200); //second argument can be fine tuned better to be lower.
 }
 
 //############################--Function Definitions--##################################
@@ -130,7 +142,7 @@ void manualLeakTest(){
   Serial.println("You have 60 seconds to check for leaks on the inlet valve.");
   Serial.print("Seconds remaining: ");
   t0 = millis();
-  uint32_t testDuration = 3*60*1000; //2 minutes in milliseconds
+  uint32_t testDuration = 1*30*1000; //2 minutes in milliseconds
   while(millis()-t0 < testDuration){
     Serial.print(millis()-t0);
     Serial.print(",\t");
