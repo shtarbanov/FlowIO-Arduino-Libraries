@@ -8,6 +8,7 @@
  *  strength to keep going, especially in difficult moments. Thank you for your support!
  *  
  */
+ 
 #include <bluefruit.h>
 #define DEVICE_NAME "FlowIO_Info"// Device Name: Maximum 30 bytes
 BLEDis devInfo; //this creats both the service and characteristic(s) automatically.
