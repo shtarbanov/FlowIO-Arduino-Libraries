@@ -18,7 +18,8 @@ enum Unit : uint8_t{
 	PSI, ATM, MBAR, KPA, PA
 };
 enum Configuration : uint8_t{ //pneumatic configuration mode
-	GENERAL, INFLATION_SERIES, VACUUM_SERIES, INFLATION_PARALLEL, VACUUM_PARALLEL
+	GENERAL, INFLATION_SERIES, INFLATION_PARALLEL, VACUUM_SERIES, VACUUM_PARALLEL
+	//Must match with configService.ini and configService.js
 };
 
 enum Component : uint8_t{
